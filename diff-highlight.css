@@ -1,0 +1,13 @@
+del {
+	background-color: tomato;
+}
+ins {
+	background-color: lightgreen;
+}
+del.diff-selected {
+	background-color: red;
+}
+ins.diff-selected {
+	background-color: green;
+}
+
