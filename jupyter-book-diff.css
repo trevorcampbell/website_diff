@@ -11,6 +11,6 @@ ins.diff-selected {
 	background-color: green;
 }
 
-.diff-highlighted {
+.link-diff-highlight {
 	background-color: yellow;
 }
