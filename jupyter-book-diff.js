@@ -1,7 +1,23 @@
-
 var diffidx = 0;
 
 $(document).ready(function() {
+   // highlight all TOC items that point to pages with diffs
+   $("li.toctree-l1 a").each(function() {
+       $.ajax({
+           url:$(this).attr("href"),
+           type:'GET',
+           success: function(data){
+               //$('#content').html(.html());
+               if ($(data).find('.bd-main ins:visible, .bd-main del:visible').length > 0){
+               	   $(this).addClass('diff-highlighted')
+               }
+           }
+       });
+   })
+   console.log($("li.toctree-l1 a").attr("href"));
+   
+
+   // highlight and scroll to the first diff element
    var cur;
    cur = $(".bd-main ins:visible,.bd-main del:visible").eq(diffidx)
    cur.addClass("diff-selected");
