@@ -4,31 +4,43 @@ import sys
 import os
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+from loguru import logger
 
-def crawl(filepath = 'index.html', crawled = None, root_element = 'html'):
+logger.remove()
+logger.add(sys.stderr, level="INFO")
+
+def crawl(filepath = 'index.html', root_element = 'html', crawled = None):
     # initialize crawl cache
     if crawled is None:
         crawled = {}
+        crawled['pages'] = {}
+        crawled['images'] = set()
 
-    # don't re-crawl any page
-    if filepath in crawled:
-        print(f"Already crawled {filepath}. Skipping")
+    # page must end in html
+    if filepath[-5:] != '.html':
+        logger.error(f"Error: Tried to crawl non-html file {filepath}")
         return
 
-    print(f"Crawling {filepath}")
+    # don't re-crawl any page
+    if filepath in crawled['pages']:
+        logger.debug(f"Already crawled {filepath}. Skipping")
+        return
+
+    logger.info(f"Crawling {filepath}")
 
     # load the HTML, parse, and add to crawl dict
     with open(filepath, 'r') as f:
         html = f.read()
 
-    print(f"Parsing {filepath}")
+    logger.debug(f"Storing HTML for {filepath}")
+    crawled['pages'][filepath] = html
+
+    logger.debug(f"Parsing {filepath}")
     soup = BeautifulSoup(html, 'html.parser')
-    # TODO: store HTML / "was there a diff" here for easier processing
-    crawled[filepath] = soup
 
     # get current directory name
     curdir = os.path.dirname(filepath)
-    print(f"Directory of {filepath}: {curdir}")
+    logger.debug(f"Directory of {filepath}: {curdir}")
 
     # crawl all local, relative links
     for link in soup.find(root_element).find_all('a'):
@@ -38,21 +50,45 @@ def crawl(filepath = 'index.html', crawled = None, root_element = 'html'):
         ref = ref.split('#')[0]
         # parse the url
         url = urlparse(ref)
-        print(f"Found link in {filepath}: {ref}")
-        print(f"Parsed link: {url}")
+        logger.debug(f"Found link in {filepath}: {ref}")
+        logger.debug(f"Parsed link: {url}")
         if not bool(url.netloc) and ref[-5:] == '.html':
             # this is a relative path to an html file. Try to find the local html file
-            print(f"This is a relative path. Trying to crawl {os.path.join(curdir, ref)}")
-            crawl(os.path.join(curdir, ref), crawled, root_element)
+            logger.debug(f"This is a relative path. Trying to crawl {os.path.join(curdir, ref)}")
+            crawl(os.path.join(curdir, ref), root_element, crawled)
         else:
-            print(f"Not a relative path. Skipping")
+            logger.debug(f"Not a relative path, or not an .html file. Skipping")
 
-# TODO
+    for img in soup.find(root_element).find_all('img'):
+        src = img.get('src')
+        url = urlparse(src)
+        logger.debug(f"Found image source in {filepath}: {src}")
+        logger.debug(f"Parsed image source {filepath}: {url}")
+        if not bool(url.netloc):
+            # this is a relative image.
+            imgpath = os.path.join(curdir, src)
+            logger.debug(f"This is a relative image path. Adding {imgpath} to images")
+            crawled['images'].add(imgpath)
+        else:
+            logger.debug(f"Not a relative image path.")
+
+    return crawled
+
+# crawl old/new
+ret = crawl('introduction-to-datascience/dev/index.html')
+for fn in ret['pages']:
+    print(fn)
+for img in ret['images']:
+    print(img)
+
+# take in 3 folder names (old, new, dif)
+old_dir = sys.argv[1]
+new_dir = sys.argv[2]
+dif_dir = sys.argv[3]
+
 
 # take three folder names, find paired HTML files in each
-dir1 = sys.argv[1]
-dir2 = sys.argv[2]
-dir3 = sys.argv[3]
+
 file_triplets = []
 for (dirpath, dirnames, filenames) in os.walk(dir1):
     for filename in filenames:
