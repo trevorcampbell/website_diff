@@ -2,8 +2,52 @@ import html_diff
 import shutil
 import sys
 import os
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
+def crawl(filepath = 'index.html', crawled = None, root_element = 'html'):
+    # initialize crawl cache
+    if crawled is None:
+        crawled = {}
+
+    # don't re-crawl any page
+    if filepath in crawled:
+        print(f"Already crawled {filepath}. Skipping")
+        return
+
+    print(f"Crawling {filepath}")
+
+    # load the HTML, parse, and add to crawl dict
+    with open(filepath, 'r') as f:
+        html = f.read()
+
+    print(f"Parsing {filepath}")
+    soup = BeautifulSoup(html, 'html.parser')
+    # TODO: store HTML / "was there a diff" here for easier processing
+    crawled[filepath] = soup
+
+    # get current directory name
+    curdir = os.path.dirname(filepath)
+    print(f"Directory of {filepath}: {curdir}")
+
+    # crawl all local, relative links
+    for link in soup.find(root_element).find_all('a'):
+        # extract the url
+        ref = link.get('href')
+        # remove anchors
+        ref = ref.split('#')[0]
+        # parse the url
+        url = urlparse(ref)
+        print(f"Found link in {filepath}: {ref}")
+        print(f"Parsed link: {url}")
+        if not bool(url.netloc) and ref[-5:] == '.html':
+            # this is a relative path to an html file. Try to find the local html file
+            print(f"This is a relative path. Trying to crawl {os.path.join(curdir, ref)}")
+            crawl(os.path.join(curdir, ref), crawled, root_element)
+        else:
+            print(f"Not a relative path. Skipping")
+
+# TODO
 
 # take three folder names, find paired HTML files in each
 dir1 = sys.argv[1]
