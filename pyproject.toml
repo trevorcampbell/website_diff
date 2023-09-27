@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "website_diff"
+authors = [
+    {name = "Trevor Campbell", email = "trevor.d.campbell@gmail.com"},
+]
+description = "A simple tool for producing navigable, highlighted diffs of rendered HTML websites"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "click",
+    "loguru",
+    "urlparse",
+    "beautifulsoup4",
+    "html_diff",
+    "Pillow"
+]
+version = "0.0.1"
+
+[project.scripts]
+website_diff = "website_diff:main"
