@@ -1,4 +1,5 @@
 import html_diff
+from bs4 import BeautifulSoup
 import os
 
 def diff(filepath_old, filepath_new, diff_images, root_element, filepath_out):
