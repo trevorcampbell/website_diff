@@ -80,10 +80,11 @@ def main(old, new, diff, root):
         if is_diff:
             diff_pages.add(page)
 
-    # loop over all pages, modifying <a> tags that point to pages with diffs with highlights
-    logger.info(f"Highlighting links to diff'd pages")
-    for page in new_pages.union(old_pages):
-        wd.page.highlight_links(page, diff, add_pages, diff_pages)
+    # TODO
+    ## loop over all pages, modifying <a> tags that point to pages with diffs with highlights
+    #logger.info(f"Highlighting links to diff'd pages")
+    #for page in new_pages.union(old_pages):
+    #    wd.page.highlight_links(page, diff, add_pages, diff_pages)
 
 if __name__ == '__main__':
     main()
