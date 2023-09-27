@@ -1,4 +1,5 @@
 from PIL import Image, ImageEnhance, ImageChops, ImageOps
+import numpy as np
 
 def diff(filepath_old, filepath_new, filepath_out):
     img_old = Image.open(filepath_old)
@@ -11,10 +12,9 @@ def diff(filepath_old, filepath_new, filepath_out):
     else:
         # diff, add a yellow border and highlight differences in bright red
         img_overlay = ImageChops.overlay(img_old, img_new)
-        for i in range(img_overlay.size[0]):
-            for j in range(img_overlay.size[1]):
-                if img_diff[i,j] != (0,0,0):
-                    img_overlay[i,j] = (255,0,0)
+        img_overlay_np = np.asarray(img_overlay)
+        img_overlay_np[ np.fabs(np.asarray(img_diff)).sum(axis=2) != 0 ] = np.array([255,0,0])
+        img_overlay = Image.fromarray(img_overlay_np)
         img_bordered = ImageOps.expand(img_overlay, border=10, fill='yellow')
         img_bordered.save(filepath_out)
         return True

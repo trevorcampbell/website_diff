@@ -13,7 +13,8 @@ dependencies = [
     "loguru",
     "beautifulsoup4",
     "html_diff",
-    "Pillow"
+    "Pillow",
+    "numpy"
 ]
 
 [project.scripts]

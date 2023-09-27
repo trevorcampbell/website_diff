@@ -62,7 +62,7 @@ def main(old, new, diff, root):
         diff_images = add_images.union(del_images)
         for img in com_images:
             is_diff = wd.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
-            logger.opt(ansi=True).info(f"Diffing image {img}: {'<blue>diff</blue>' if is_diff else '<white>same</white>'}")
+            logger.opt(ansi=True).info(f"Diffing image {img}: {'<yellow>diff</yellow>' if is_diff else '<white>same</white>'}")
             if is_diff:
                 diff_images.add(img)
 
@@ -81,7 +81,7 @@ def main(old, new, diff, root):
         for page in com_pages:
             # TODO: account for diff'd images in is_diff here
             is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, os.path.join(diff, page))
-            logger.opt(ansi=True).info(f"Diffing page {page}: {'<blue>diff</blue>' if is_diff else '<white>same</white>'}")
+            logger.opt(ansi=True).info(f"Diffing page {page}: {'<yellow>diff</yellow>' if is_diff else '<white>same</white>'}")
             if is_diff:
                 diff_pages.add(page)
 
