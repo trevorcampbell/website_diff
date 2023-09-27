@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import click
 import sys
 import os
@@ -14,7 +13,7 @@ logger.add(sys.stderr, level="INFO")
 @click.option('--new', help='A directory containing the new version of the website (index.html should be in this directory).')
 @click.option('--diff', help='A path to a new directory that will contain the diffed version of the website.')
 @click.option('--root', default='html', help='A BeautifulSoup selector for the root element within which to search for diffs')
-def main(old, new, diff, root):
+def _main(old, new, diff, root):
     # copy over the new directory to the diff directory
     # also ensure directory doesn't exist before this code runs
     logger.info(f"Preparing new website directory at {diff}")
@@ -86,7 +85,7 @@ def main(old, new, diff, root):
     #for page in new_pages.union(old_pages):
     #    wd.page.highlight_links(page, diff, add_pages, diff_pages)
 
-if __name__ == '__main__':
-    main()
+def main():
+    _main()
 
 

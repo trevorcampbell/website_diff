@@ -8,6 +8,7 @@ authors = [
     {name = "Trevor Campbell", email = "trevor.d.campbell@gmail.com"},
 ]
 description = "A simple tool for producing navigable, highlighted diffs of rendered HTML websites"
+license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
@@ -19,6 +20,12 @@ dependencies = [
     "Pillow"
 ]
 version = "0.0.1"
+
+[project.scripts]
+website_diff = "website_diff.cli:main"
+
+[tool.setuptools]
+package-data = {"website_diff" = ["*.css", "*.js"]}
 
 [project.scripts]
 website_diff = "website_diff:main"
