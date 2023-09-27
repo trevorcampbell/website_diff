@@ -9,7 +9,8 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
     with open(filepath_new, 'r') as f:
         html_new = f.read()
 
-    ## remove plotly, altair viz prior to diff
+    # TODO
+    ## remove large data elements (plotly viz, altair viz) prior to diff
     #soup_old = BeautifulSoup(html_old, 'html.parser')
     #for elem in soup_old.select_one(root_element).find_all('script', {'type':'text/javascript'}):
     #    elem.decompose()

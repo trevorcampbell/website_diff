@@ -6,6 +6,10 @@ import shutil
 import website_diff as wd
 from loguru import logger
 
+this_dir, this_filename = os.path.split(__file__)
+diffjs_path = os.path.join(this_dir, "website_diff.js")
+diffcss_path = os.path.join(this_dir, "website_diff.css")
+
 logger.remove()
 logger.add(sys.stderr, level="INFO")
 
@@ -17,9 +21,13 @@ logger.add(sys.stderr, level="INFO")
 def main(old, new, diff, root):
     # copy over the new directory to the diff directory
     # also ensure directory doesn't exist before this code runs
+    # copy the js/css to all subdirs (just brute forcing this for now...)
     logger.info(f"Preparing new website directory at {diff}")
     shutil.copytree(old, diff)
     shutil.copytree(new, diff, dirs_exist_ok=True)
+    for r, _, _ in os.walk(diff):
+        shutil.copy2(diffjs_path, r)
+        shutil.copy2(diffcss_path, r)
 
     try:
         # crawl the old websites for pages and images

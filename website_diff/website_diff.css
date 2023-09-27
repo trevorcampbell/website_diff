@@ -1,13 +1,13 @@
-del.diff {
+del.diff, del.diff * {
 	background-color: lightcoral;
 }
-ins.diff {
+ins.diff, ins.diff * {
 	background-color: lightgreen;
 }
-del.diff-selected {
+del.diff-selected, del.diff-selected * {
 	background-color: firebrick;
 }
-ins.diff-selected {
+ins.diff-selected, ins.diff-selected * {
 	background-color: limegreen;
 }
 
