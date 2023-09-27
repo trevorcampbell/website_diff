@@ -1,16 +1,26 @@
 del {
-	background-color: tomato;
+	background-color: lightcoral;
 }
 ins {
 	background-color: lightgreen;
 }
 del.diff-selected {
-	background-color: red;
+	background-color: firebrick;
 }
 ins.diff-selected {
-	background-color: green;
+	background-color: limegreen;
 }
 
-.link-diff-highlight {
-	background-color: yellow;
+.link-diff {
+	color: darkgoldenrod;
 }
+
+.link-new {
+	color: darkgreen;
+}
+
+.link-del {
+	color: darkred;
+}
+
+
