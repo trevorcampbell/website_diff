@@ -26,6 +26,3 @@ website_diff = "website_diff.cli:main"
 
 [tool.setuptools]
 package-data = {"website_diff" = ["*.css", "*.js"]}
-
-[project.scripts]
-website_diff = "website_diff:main"
