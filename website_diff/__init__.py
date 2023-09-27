@@ -1,6 +1,6 @@
-import crawler
-import image
-import page
-import cli
+import .crawler
+import .image
+import .page
+import .cli
 
 
