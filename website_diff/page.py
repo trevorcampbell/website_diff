@@ -2,25 +2,52 @@ import html_diff
 from bs4 import BeautifulSoup
 import os
 
-def diff(filepath_old, filepath_new, diff_images, root_element, filepath_out):
+def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
     with open(filepath_old, 'r') as f:
         html_old = f.read()
     with open(filepath_new, 'r') as f:
         html_new = f.read()
 
+    ## remove plotly, altair viz prior to diff
+    #soup_old = BeautifulSoup(html_old, 'html.parser')
+    #for elem in soup_old.select_one(root_element).find_all('script', {'type':'text/javascript'}):
+    #    elem.decompose()
+    #for elem in soup_old.select_one(root_element).find_all('div', {'class':'plotly'}):
+    #    elem.contentdecompose()
+    #html_old = str(soup_old)
+    #soup_new = BeautifulSoup(html_new, 'html.parser')
+    #for elem in soup_new.select_one(root_element).find_all('script', {'type':'text/javascript'}):
+    #    elem.decompose()
+    #for elem in soup_new.select_one(root_element).find_all('div', {'class':'plotly'}):
+    #    elem.decompose()
+    #html_new = str(soup_new)
+
     # generate the html diff
     hdf = html_diff.diff(html_old, html_new)
     soup = BeautifulSoup(hdf, 'html.parser')
 
     is_diff = False
-    if (soup.find(root_element).find('ins') is not None) or (soup.find(root_element).find('del') is not None):
+    for tag in soup.select_one(root_element).select('ins'):
+        tag['class'] = tag.get('class',[]) + ['diff']
+        is_diff = True
+    for tag in soup.select_one(root_element).select('del'):
+        tag['class'] = tag.get('class',[]) + ['diff']
+        is_diff = True
+    for tag in soup.select_one(root_element).select('img'):
+        relpath = tag.get('src')
+        img_path_from_root = os.path.relpath(os.path.normpath(os.path.join(os.path.dirname(filepath_out), relpath)), out_root)
+        if img_path_from_root in diff_images:
+            tag['class'] = tag.get('class',[]) + ['diff']
+            is_diff = True
+
+    # if there was a diff, append the js/css files
+    if is_diff:
         # add the scrolling javascript and style file to highlight the diff
         js_soup = BeautifulSoup('<script src="website_diff.js"></script>', 'html.parser')
         css_soup = BeautifulSoup('<link rel="stylesheet" href="website_diff.css" type="text/css"/>', 'html.parser')
-        soup.find("head").append(js_soup)
-        soup.find("head").append(css_soup)
-        is_diff = True
+        soup.select_one("head").append(js_soup)
+        soup.select_one("head").append(css_soup)
 
     # write the diff
     with open(filepath_out, 'w') as f:
@@ -39,7 +66,7 @@ def highlight_links(filepath, root, add_pages, diff_pages, diff_images):
     curdir = os.path.dirname(filepath)
 
     # find all links
-    for link in soup.find_all('a'):
+    for link in soup.select('a'):
         # extract the url
         ref = link.get('href')
         # remove anchors

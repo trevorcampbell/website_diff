@@ -61,8 +61,9 @@ def main(old, new, diff, root):
         logger.info(f"Diffing common images")
         diff_images = add_images.union(del_images)
         for img in com_images:
+            logger.info(f"Diffing image {img}")
             is_diff = wd.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
-            logger.opt(ansi=True).info(f"Diffing image {img}: {'<yellow>diff</yellow>' if is_diff else '<white>same</white>'}")
+            logger.info(f"Image diff {img}: {'difference!' if is_diff else 'same'}")
             if is_diff:
                 diff_images.add(img)
 
@@ -79,9 +80,9 @@ def main(old, new, diff, root):
         logger.info(f"Diffing common website pages")
         diff_pages = set()
         for page in com_pages:
-            # TODO: account for diff'd images in is_diff here
-            is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, os.path.join(diff, page))
-            logger.opt(ansi=True).info(f"Diffing page {page}: {'<yellow>diff</yellow>' if is_diff else '<white>same</white>'}")
+            logger.info(f"Diffing page {page}")
+            is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, diff, os.path.join(diff, page))
+            logger.info(f"Page diff {page}: {'difference!' if is_diff else 'same'}")
             if is_diff:
                 diff_pages.add(page)
 
@@ -96,4 +97,4 @@ def main(old, new, diff, root):
 
         # cleanup diff dir if there was a failure
         print(f"Cleaning up directory {diff}")
-        shutil.rmtree(diff)
+        #shutil.rmtree(diff)

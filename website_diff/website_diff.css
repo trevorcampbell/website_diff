@@ -1,7 +1,7 @@
-del {
+del.diff {
 	background-color: lightcoral;
 }
-ins {
+ins.diff {
 	background-color: lightgreen;
 }
 del.diff-selected {
@@ -11,15 +11,15 @@ ins.diff-selected {
 	background-color: limegreen;
 }
 
-.link-diff {
+.link-to-diff {
 	color: darkgoldenrod;
 }
 
-.link-new {
+.link-to-new {
 	color: darkgreen;
 }
 
-.link-del {
+.link-to-del {
 	color: darkred;
 }
 
