@@ -1,5 +1,6 @@
 import click
 import sys
+import traceback
 import os
 import shutil
 import website_diff as wd
@@ -20,67 +21,77 @@ def main(old, new, diff, root):
     shutil.copytree(old, diff)
     shutil.copytree(new, diff, dirs_exist_ok=True)
 
-    # crawl the old websites for pages and images
-    logger.info(f"Crawling old website at {old}")
-    old_images = set()
-    old_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, old_images)
-    old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), old_gather)
-    # make old_images, old_pages relative to old dir
-    old_pages = set(os.path.relpath(path, old) for path in old_pages)
-    old_images = set(os.path.relpath(path, old) for path in old_images)
+    try:
+        # crawl the old websites for pages and images
+        logger.info(f"Crawling old website at {old}")
+        old_images = set()
+        old_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, old_images)
+        old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), old_gather)
+        # make old_images, old_pages relative to old dir
+        old_pages = set(os.path.relpath(path, old) for path in old_pages)
+        old_images = set(os.path.relpath(path, old) for path in old_images)
 
-    # crawl the new websites for pages and images
-    logger.info(f"Crawling new website at {new}")
-    new_images = set()
-    new_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, new_images)
-    new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), new_gather)
-    # make new_images, new_pages relative to new dir
-    new_pages = set(os.path.relpath(path, new) for path in new_pages)
-    new_images = set(os.path.relpath(path, new) for path in new_images)
+        # crawl the new websites for pages and images
+        logger.info(f"Crawling new website at {new}")
+        new_images = set()
+        new_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, new_images)
+        new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), new_gather)
+        # make new_images, new_pages relative to new dir
+        new_pages = set(os.path.relpath(path, new) for path in new_pages)
+        new_images = set(os.path.relpath(path, new) for path in new_images)
 
-    # figure out which images are newly added, deleted, and common
-    logger.info(f"Separating images into new, deleted, and common")
-    add_images = new_images.setdiff(old_images)
-    logger.info(f"Newly added images: {add_images}")
-    del_images = old_images.setdiff(new_images)
-    logger.info(f"Deleted pages: {del_pages}")
-    com_images = new_images.intersection(old_images)
-    logger.info(f"Common pages: {com_images}")
+        # figure out which images are newly added, deleted, and common
+        logger.info(f"Separating images into new, deleted, and common")
+        add_images = new_images - old_images
+        logger.info(f"Newly added images: {add_images}")
+        del_images = old_images - new_images
+        logger.info(f"Deleted images: {del_images}")
+        com_images = new_images.intersection(old_images)
+        logger.info(f"Common images: {com_images}")
 
-    # highlight the newly added images, diff the others
-    logger.info(f"Highlighting new images")
-    for img in add_images:
-        wd.image.highlight_add(os.path.join(new, img), os.path.join(diff, img))
-    logger.info(f"Highlighting deleted images")
-    for img in del_images:
-        wd.image.highlight_del(os.path.join(old, img), os.path.join(diff, img))
-    logger.info(f"Diffing common images")
-    diff_images = add_images.union(del_images)
-    for img in com_images:
-        is_diff = wd.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
-        if is_diff:
-            diff_images.add(img)
+        # highlight the newly added images, diff the others
+        logger.info(f"Highlighting new images")
+        for img in add_images:
+            wd.image.highlight_add(os.path.join(new, img), os.path.join(diff, img))
+        logger.info(f"Highlighting deleted images")
+        for img in del_images:
+            wd.image.highlight_del(os.path.join(old, img), os.path.join(diff, img))
+        logger.info(f"Diffing common images")
+        diff_images = add_images.union(del_images)
+        for img in com_images:
+            logger.info(f"Diffing image {img}")
+            is_diff = wd.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
+            if is_diff:
+                diff_images.add(img)
 
-    # figure out which pages are newly added, deleted, and common
-    logger.info(f"Separating pages into new, deleted, and common")
-    add_pages = new_pages.setdiff(old_pages)
-    logger.info(f"Newly added pages: {add_pages}")
-    del_pages = old_pages.setdiff(new_pages)
-    logger.info(f"Deleted pages: {del_pages}")
-    com_pages = new_pages.intersection(old_pages)
-    logger.info(f"Common pages: {com_pages}")
+        # figure out which pages are newly added, deleted, and common
+        logger.info(f"Separating pages into new, deleted, and common")
+        add_pages = new_pages - old_pages
+        logger.info(f"Newly added pages: {add_pages}")
+        del_pages = old_pages - new_pages
+        logger.info(f"Deleted pages: {del_pages}")
+        com_pages = new_pages.intersection(old_pages)
+        logger.info(f"Common pages: {com_pages}")
 
-    # diff the common pages
-    logger.info(f"Diffing common website pages")
-    diff_pages = set()
-    for page in com_pages:
-        # TODO: account for diff'd images in is_diff here
-        is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, os.path.join(diff, page))
-        if is_diff:
-            diff_pages.add(page)
+        # diff the common pages
+        logger.info(f"Diffing common website pages")
+        diff_pages = set()
+        for page in com_pages:
+            logger.info(f"Diffing page {page}")
+            # TODO: account for diff'd images in is_diff here
+            is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, os.path.join(diff, page))
+            if is_diff:
+                diff_pages.add(page)
 
-    # TODO
-    ## loop over all pages, modifying <a> tags that point to pages with diffs with highlights
-    #logger.info(f"Highlighting links to diff'd pages")
-    #for page in new_pages.union(old_pages):
-    #    wd.page.highlight_links(page, diff, add_pages, diff_pages)
+        # TODO
+        ## loop over all pages, modifying <a> tags that point to pages with diffs with highlights
+        #logger.info(f"Highlighting links to diff'd pages")
+        #for page in new_pages.union(old_pages):
+        #    wd.page.highlight_links(page, diff, add_pages, diff_pages)
+    except Exception:
+        # print the exception
+        print(traceback.format_exc())
+
+        # cleanup diff dir if there was a failure
+        print(f"Cleaning up directory {diff}")
+        shutil.rmtree(diff)
