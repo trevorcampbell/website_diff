@@ -43,43 +43,45 @@ def main(old, new, diff, root):
         # figure out which images are newly added, deleted, and common
         logger.info(f"Separating images into new, deleted, and common")
         add_images = new_images - old_images
-        logger.info(f"Newly added images: {add_images}")
+        logger.info(f"{len(add_images)} newly added images")
         del_images = old_images - new_images
-        logger.info(f"Deleted images: {del_images}")
+        logger.info(f"{len(del_images)} deleted images")
         com_images = new_images.intersection(old_images)
-        logger.info(f"Common images: {com_images}")
+        logger.info(f"{len(com_images)} common images")
 
         # highlight the newly added images, diff the others
         logger.info(f"Highlighting new images")
         for img in add_images:
+            logger.info(f"Highlighting new image {img}")
             wd.image.highlight_add(os.path.join(new, img), os.path.join(diff, img))
         logger.info(f"Highlighting deleted images")
         for img in del_images:
+            logger.info(f"Highlighting deleted image {img}")
             wd.image.highlight_del(os.path.join(old, img), os.path.join(diff, img))
         logger.info(f"Diffing common images")
         diff_images = add_images.union(del_images)
         for img in com_images:
-            logger.info(f"Diffing image {img}")
             is_diff = wd.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
+            logger.opt(ansi=True).info(f"Diffing image {img}: {'<blue>diff</blue>' if is_diff else '<white>same</white>'}")
             if is_diff:
                 diff_images.add(img)
 
         # figure out which pages are newly added, deleted, and common
         logger.info(f"Separating pages into new, deleted, and common")
         add_pages = new_pages - old_pages
-        logger.info(f"Newly added pages: {add_pages}")
+        logger.info(f"{len(add_pages)} newly added pages")
         del_pages = old_pages - new_pages
-        logger.info(f"Deleted pages: {del_pages}")
+        logger.info(f"{len(del_pages)} deleted pages")
         com_pages = new_pages.intersection(old_pages)
-        logger.info(f"Common pages: {com_pages}")
+        logger.info(f"{len(com_pages)} common pages")
 
         # diff the common pages
         logger.info(f"Diffing common website pages")
         diff_pages = set()
         for page in com_pages:
-            logger.info(f"Diffing page {page}")
             # TODO: account for diff'd images in is_diff here
             is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, os.path.join(diff, page))
+            logger.opt(ansi=True).info(f"Diffing page {page}: {'<blue>diff</blue>' if is_diff else '<white>same</white>'}")
             if is_diff:
                 diff_pages.add(page)
 
