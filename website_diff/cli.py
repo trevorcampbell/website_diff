@@ -9,11 +9,11 @@ logger.remove()
 logger.add(sys.stderr, level="INFO")
 
 @click.command()
-@click.option('--old', help='A directory containing the old version of the website (index.html should be in this directory).')
-@click.option('--new', help='A directory containing the new version of the website (index.html should be in this directory).')
-@click.option('--diff', help='A path to a new directory that will contain the diffed version of the website.')
-@click.option('--root', default='html', help='A BeautifulSoup selector for the root element within which to search for diffs')
-def _main(old, new, diff, root):
+@click.option('-o', '--old', help='A directory containing the old version of the website (index.html should be in this directory).', required=True)
+@click.option('-n', '--new', help='A directory containing the new version of the website (index.html should be in this directory).', required=True)
+@click.option('-d', '--diff', help='A path to a new directory that will contain the diffed version of the website (this directory should not exist yet).', required=True)
+@click.option('-r', '--root', default='html', help='A BeautifulSoup selector for the root element within which to search for diffs')
+def main(old, new, diff, root):
     # copy over the new directory to the diff directory
     # also ensure directory doesn't exist before this code runs
     logger.info(f"Preparing new website directory at {diff}")
@@ -84,8 +84,3 @@ def _main(old, new, diff, root):
     #logger.info(f"Highlighting links to diff'd pages")
     #for page in new_pages.union(old_pages):
     #    wd.page.highlight_links(page, diff, add_pages, diff_pages)
-
-def main():
-    _main()
-
-

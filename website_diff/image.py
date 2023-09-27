@@ -25,7 +25,7 @@ def highlight_add(filepath, filepath_out):
 def highlight_del(filepath, filepath_out):
     _highlight_image(filepath, filepath_out, "firebrick", 0.5)
 
-def _highlight_image(filepath, filepath_out, color, alpha)
+def _highlight_image(filepath, filepath_out, color, alpha):
     img = Image.open(filepath)
     bw = ImageEnhance.Color(img).enhance(0.0)
     overlay = Image.new("RGBA", img.size, color = "limegreen")
