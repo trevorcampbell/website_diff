@@ -19,11 +19,11 @@ pip install website_diff
 `website_diff` takes as an input two folders each containing an `index.html` file, as well as the name of a third folder to be created
 that will contain the diffed website.
 ```
-website_diff --old path/to/old/site/ --new path/to/new/site/ --diff path/to/not/yet/existing/diff/site
+website_diff --old path/to/old/site/ --new path/to/new/site/ --diff path/where/diff/site/will/be/created
 ```
 If `website_diff` runs successfully, the diff website will be available at
 ```
-path/to/not/yet/existing/diff/site/index.html
+path/where/diff/site/will/be/created/index.html
 ```
 
 To access the command line interface help documentation, run
