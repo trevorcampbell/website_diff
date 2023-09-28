@@ -3,7 +3,7 @@ var diffidx = 0;
 $(document).ready(function() {
    // highlight and scroll to the first diff element
    var cur;
-   cur = $(".diff").eq(diffidx)
+   cur = $(".diff:visible").eq(diffidx)
    cur.addClass("diff-selected");
    $(cur)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
 });
@@ -11,12 +11,12 @@ $(document).ready(function() {
 $(document).on("keypress", function(e) {
    var cur;	
    var next;
-   cur = $(".diff").eq(diffidx)
+   cur = $(".diff:visible").eq(diffidx)
    cur.removeClass("diff-selected");
    if (e.which == 110){
      diffidx += 1;
-     if (diffidx > $(".diff").length-1){
-         diffidx = $(".diff").length-1;
+     if (diffidx > $(".diff:visible").length-1){
+         diffidx = $(".diff:visible").length-1;
      }
    } 
    if (e.which == 78) {
@@ -25,7 +25,7 @@ $(document).on("keypress", function(e) {
      	diffidx = 0;
      }
    }
-   next = $(".diff").eq(diffidx)
+   next = $(".diff:visible").eq(diffidx)
    next.addClass("diff-selected")
    $(next)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
 });
