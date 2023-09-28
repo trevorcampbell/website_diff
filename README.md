@@ -21,7 +21,7 @@ that will contain the diffed website.
 ```
 website_diff --old path/to/old/site/ --new path/to/new/site/ --diff path/to/not/yet/existing/diff/site
 ```
-If `website_diff` runs successfully, the new website will be available at
+If `website_diff` runs successfully, the diff website will be available at
 ```
 path/to/not/yet/existing/diff/site/index.html
 ```
