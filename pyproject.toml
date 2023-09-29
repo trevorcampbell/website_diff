@@ -14,7 +14,8 @@ dependencies = [
     "beautifulsoup4",
     "html_diff",
     "Pillow",
-    "numpy"
+    "numpy",
+    "vl-convert-python"
 ]
 
 [project.scripts]
