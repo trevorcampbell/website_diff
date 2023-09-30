@@ -1,12 +1,15 @@
 import vl_convert as vlc
+from json import JSONDecoder
 
+tasks = {
+    "flatten altair images" : render_altair
+}
 
-def render_altair_images():
+def render_altair(filepath, html, soup, root_element):
     # find all divs with id="altair-viz-####"
     # find all subsequent script elements with type = text/javascript
     # in the content, look for {"$schema" : "...", ...} and parse until closing brace
 
-from json import JSONDecoder
 
 def extract_json_objects(text, decoder=JSONDecoder()):
     """Find JSON objects in text, and yield the decoded JSON data

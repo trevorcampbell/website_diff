@@ -4,10 +4,10 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from loguru import logger
 
-def crawl(filepath, action, root_element = 'html', crawled = None):
+def crawl(filepath, content_selector = 'html', crawled = None):
     # initialize crawl cache
     if crawled is None:
-        crawled = set()
+        crawled = {}
 
     # normalize the filepath
     filepath = os.path.normpath(filepath)
@@ -23,7 +23,6 @@ def crawl(filepath, action, root_element = 'html', crawled = None):
         return
 
     logger.info(f"Crawling {filepath}")
-    crawled.add(filepath)
 
     # load the HTML, parse, and add to crawl dict
     with open(filepath, 'r') as f:
@@ -32,48 +31,29 @@ def crawl(filepath, action, root_element = 'html', crawled = None):
     logger.debug(f"Parsing {filepath}")
     soup = BeautifulSoup(html, 'html.parser')
 
+    crawled[filepath] = soup
+
     # get current directory name
     curdir = os.path.dirname(filepath)
     logger.debug(f"Directory of {filepath}: {curdir}")
 
     # crawl all local, relative links
-    for link in soup.find(root_element).find_all('a'):
-        # extract the url
-        ref = link.get('href')
-        # remove anchors
-        ref = ref.split('#')[0]
-        # parse the url
-        url = urlparse(ref)
-        logger.debug(f"Found link in {filepath}: {ref}")
-        logger.debug(f"Parsed link: {url}")
-        if not bool(url.netloc) and ref[-5:] == '.html':
-            # this is a relative path to an html file. Try to find the local html file
-            logger.debug(f"This is a relative path. Trying to crawl {os.path.join(curdir, ref)}")
-            crawl(os.path.join(curdir, ref), action, root_element, crawled)
-        else:
-            logger.debug(f"Not a relative path, or not an .html file. Skipping")
-
-    # perform an action on this page
-    action(filepath, html, soup, root_element)
+    for elem in soup.select_all(content_selector):
+    	for link in elem.find_all('a'):
+            # extract the url
+            ref = link.get('href')
+            # remove anchors
+            ref = ref.split('#')[0]
+            # parse the url
+            url = urlparse(ref)
+            logger.debug(f"Found link in {filepath}: {ref}")
+            logger.debug(f"Parsed link: {url}")
+            if not bool(url.netloc) and ref[-5:] == '.html':
+                # this is a relative path to an html file. Try to find the local html file
+                logger.debug(f"This is a relative path. Trying to crawl {os.path.join(curdir, ref)}")
+                crawl(os.path.join(curdir, ref), root_element, crawled)
+            else:
+                logger.debug(f"Not a relative path, or not an .html file. Skipping")
 
     # return the set of crawled pages
     return crawled
-
-def gather_local_images(filepath, html, soup, root_element, gathered):
-    logger.debug(f"Finding all images in {filepath}")
-    # get current directory name
-    curdir = os.path.dirname(filepath)
-    logger.debug(f"Directory of {filepath}: {curdir}")
-    # find all local images
-    for img in soup.find(root_element).find_all('img'):
-        src = img.get('src')
-        url = urlparse(src)
-        logger.debug(f"Found image source in {filepath}: {src}")
-        logger.debug(f"Parsed image source {filepath}: {url}")
-        if not bool(url.netloc):
-            # this is a relative image.
-            imgpath = os.path.normpath(os.path.join(curdir, src))
-            logger.debug(f"This is a relative image path. Adding {imgpath} to images")
-            gathered.add(imgpath)
-        else:
-            logger.debug(f"Not a relative image path.")

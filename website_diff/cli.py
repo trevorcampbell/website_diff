@@ -5,20 +5,24 @@ import os
 import shutil
 import website_diff as wd
 from loguru import logger
-
-this_dir, this_filename = os.path.split(__file__)
-diffjs_path = os.path.join(this_dir, "website_diff.js")
-diffcss_path = os.path.join(this_dir, "website_diff.css")
-
-logger.remove()
-logger.add(sys.stderr, level="INFO")
+import render
 
 @click.command()
 @click.option('-o', '--old', help='A directory containing the old version of the website (index.html should be in this directory).', required=True)
 @click.option('-n', '--new', help='A directory containing the new version of the website (index.html should be in this directory).', required=True)
 @click.option('-d', '--diff', help='A path to a new directory that will contain the diffed version of the website (this directory should not exist yet).', required=True)
-@click.option('-r', '--root', default='html', help='A BeautifulSoup selector for the root element within which to search for diffs')
-def main(old, new, diff, root):
+@click.option('-s', '--selector', default='html', help='A BeautifulSoup selector for the main content of the page. website_diff will only search inside these elements for diffs')
+@click.option('-i', '--index', default='index.html', help='The main html page filename')
+def main(old, new, diff, selector, index):
+    # get paths for js/css files
+    this_dir, this_filename = os.path.split(__file__)
+    diffjs_path = os.path.join(this_dir, "website_diff.js")
+    diffcss_path = os.path.join(this_dir, "website_diff.css")
+
+    # set log level to suppress debug messages
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
+
     # copy over the new directory to the diff directory
     # also ensure directory doesn't exist before this code runs
     # copy the js/css to all subdirs (just brute forcing this for now...)
@@ -30,22 +34,33 @@ def main(old, new, diff, root):
         shutil.copy2(diffcss_path, r)
 
     try:
-        # crawl the old websites for pages and images
+        # crawl the old/new websites for pages
         logger.info(f"Crawling old website at {old}")
-        old_images = set()
-        old_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, old_images)
-        old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), old_gather)
-        # make old_images, old_pages relative to old dir
-        old_pages = set(os.path.relpath(path, old) for path in old_pages)
-        old_images = set(os.path.relpath(path, old) for path in old_images)
-
-        # crawl the new websites for pages and images
+        old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), selector)
         logger.info(f"Crawling new website at {new}")
-        new_images = set()
-        new_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, new_images)
-        new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), new_gather)
-        # make new_images, new_pages relative to new dir
-        new_pages = set(os.path.relpath(path, new) for path in new_pages)
+        new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), selector)
+
+        # convert paths to relative
+        old_pages = {os.path.relpath(path, old) : soup for (path, soup) in old_pages.items()}
+        new_pages = {os.path.relpath(path, new) : soup for (path, soup) in new_pages.items()}
+
+        # render complicated html elements
+        for relpath in old_pages:
+            print(f"Rendering page {os.path.join(old, relpath)}")
+            for task in render.tasks:
+                print(f"Render task: {task}")
+                render.tasks[task](old, relpath, old_pages[relpath])
+        for relpath in new_pages:
+            print(f"Rendering page {os.path.join(new, relpath)}")
+            for task in render.tasks:
+                print(f"Render task: {task}")
+                render.tasks[task](new, relpath, new_pages[relpath])
+
+        # gather various items in preparation for diff
+        # for each item check if new/old/common, and 
+
+
+        old_images = set(os.path.relpath(path, old) for path in old_images)
         new_images = set(os.path.relpath(path, new) for path in new_images)
 
         # figure out which images are newly added, deleted, and common
@@ -105,4 +120,4 @@ def main(old, new, diff, root):
 
         # cleanup diff dir if there was a failure
         print(f"Cleaning up directory {diff}")
-        #shutil.rmtree(diff)
+        shutil.rmtree(diff)

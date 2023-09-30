@@ -2,12 +2,39 @@ import html_diff
 from bs4 import BeautifulSoup
 import os
 
+def gather_local_images(soup, gathered):
+    logger.debug(f"Finding all images in {filepath}")
+    # get current directory name
+    curdir = os.path.dirname(filepath)
+    logger.debug(f"Directory of {filepath}: {curdir}")
+    # find all local images
+    for img in soup.find(root_element).find_all('img'):
+        src = img.get('src')
+        url = urlparse(src)
+        logger.debug(f"Found image source in {filepath}: {src}")
+        logger.debug(f"Parsed image source {filepath}: {url}")
+        if not bool(url.netloc):
+            # this is a relative image.
+            imgpath = os.path.normpath(os.path.join(curdir, src))
+            logger.debug(f"This is a relative image path. Adding {imgpath} to images")
+            gathered.add(imgpath)
+        else:
+            logger.debug(f"Not a relative image path.")
+
+def soup_diff(old_soup, new_soup):
+    s = BeautifulSoup("", "html.parser")
+    s.extend(html_diff.NodeOtherTag(old_soup, new_soup, True).dump_to_tag_list(s))
+    return s
+
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
     with open(filepath_old, 'r') as f:
         html_old = f.read()
     with open(filepath_new, 'r') as f:
         html_new = f.read()
+
+    soup_old = BeautifulSoup(html_old, "html.parser")
+    soup_new = BeautifulSoup(html_new, "html.parser")
 
     # TODO
     ## remove large data elements (plotly viz, altair viz) prior to diff
@@ -25,8 +52,7 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
     #html_new = str(soup_new)
 
     # generate the html diff
-    hdf = html_diff.diff(html_old, html_new)
-    soup = BeautifulSoup(hdf, 'html.parser')
+    soup = soup_diff(soup_old, soup_new)
 
     is_diff = False
     for tag in soup.select_one(root_element).select('ins'):
