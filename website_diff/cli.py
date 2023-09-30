@@ -16,8 +16,8 @@ import render
 def main(old, new, diff, selector, index):
     # get paths for js/css files
     this_dir, this_filename = os.path.split(__file__)
-    diffjs_path = os.path.join(this_dir, "website_diff.js")
-    diffcss_path = os.path.join(this_dir, "website_diff.css")
+    diffjs_path = os.path.join(this_dir, "static/website_diff.js")
+    diffcss_path = os.path.join(this_dir, "static/website_diff.css")
 
     # set log level to suppress debug messages
     logger.remove()
