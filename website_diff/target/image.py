@@ -1,6 +1,25 @@
 from PIL import Image, ImageEnhance, ImageChops, ImageOps
 import numpy as np
 
+def gather(soup):
+    logger.debug(f"Finding all images in {filepath}")
+    # get current directory name
+    curdir = os.path.dirname(filepath)
+    logger.debug(f"Directory of {filepath}: {curdir}")
+    # find all local images
+    for img in soup.find(root_element).find_all('img'):
+        src = img.get('src')
+        url = urlparse(src)
+        logger.debug(f"Found image source in {filepath}: {src}")
+        logger.debug(f"Parsed image source {filepath}: {url}")
+        if not bool(url.netloc):
+            # this is a relative image.
+            imgpath = os.path.normpath(os.path.join(curdir, src))
+            logger.debug(f"This is a relative image path. Adding {imgpath} to images")
+            gathered.add(imgpath)
+        else:
+            logger.debug(f"Not a relative image path.")
+
 def diff(filepath_old, filepath_new, filepath_out):
     img_old = Image.open(filepath_old)
     img_new = Image.open(filepath_new)

@@ -2,25 +2,6 @@ import html_diff
 from bs4 import BeautifulSoup
 import os
 
-def gather_local_images(soup, gathered):
-    logger.debug(f"Finding all images in {filepath}")
-    # get current directory name
-    curdir = os.path.dirname(filepath)
-    logger.debug(f"Directory of {filepath}: {curdir}")
-    # find all local images
-    for img in soup.find(root_element).find_all('img'):
-        src = img.get('src')
-        url = urlparse(src)
-        logger.debug(f"Found image source in {filepath}: {src}")
-        logger.debug(f"Parsed image source {filepath}: {url}")
-        if not bool(url.netloc):
-            # this is a relative image.
-            imgpath = os.path.normpath(os.path.join(curdir, src))
-            logger.debug(f"This is a relative image path. Adding {imgpath} to images")
-            gathered.add(imgpath)
-        else:
-            logger.debug(f"Not a relative image path.")
-
 def soup_diff(old_soup, new_soup):
     s = BeautifulSoup("", "html.parser")
     s.extend(html_diff.NodeOtherTag(old_soup, new_soup, True).dump_to_tag_list(s))

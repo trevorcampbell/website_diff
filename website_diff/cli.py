@@ -5,7 +5,6 @@ import os
 import shutil
 import website_diff as wd
 from loguru import logger
-import render
 
 @click.command()
 @click.option('-o', '--old', help='A directory containing the old version of the website (index.html should be in this directory).', required=True)
@@ -44,24 +43,32 @@ def main(old, new, diff, selector, index):
         old_pages = {os.path.relpath(path, old) : soup for (path, soup) in old_pages.items()}
         new_pages = {os.path.relpath(path, new) : soup for (path, soup) in new_pages.items()}
 
-        # render complicated html elements
+        # perform render tasks, gather diff targets for old pages
+        old_targets = {}
         for relpath in old_pages:
             print(f"Rendering page {os.path.join(old, relpath)}")
             for task in render.tasks:
-                print(f"Render task: {task}")
-                render.tasks[task](old, relpath, old_pages[relpath])
+                print(f"Performing render task: {task}")
+                wd.render.tasks[task](old, relpath, old_pages[relpath], selector)
+            print(f"Gathering diff targets from page {os.path.join(old, relpath)}")
+            for item in target.items:
+                print(f"Gathering item: {item}")
+                old_targets[item] = wd.target.items[item].gather(old, relpath, old_pages[relpath], selector)
+                # TODO immediately diff it to avoid memory blowup
+                # TODO add "diff" tag to page above if a diff is found
+                # TODO render both new and old prior to doing item diffs
+
+        # perform render tasks, gather diff targets for new pages
+        new_targets = {}
         for relpath in new_pages:
             print(f"Rendering page {os.path.join(new, relpath)}")
             for task in render.tasks:
                 print(f"Render task: {task}")
-                render.tasks[task](new, relpath, new_pages[relpath])
-
-        # gather various items in preparation for diff
-        # for each item check if new/old/common, and 
-
-
-        old_images = set(os.path.relpath(path, old) for path in old_images)
-        new_images = set(os.path.relpath(path, new) for path in new_images)
+                wd.render.tasks[task](new, relpath, new_pages[relpath], selector)
+            print(f"Gathering diff targets from page {os.path.join(new, relpath)}")
+            for item in target.items:
+                print(f"Gathering item: {item}")
+                new_targets[item] = wd.target.items[item].gather(new, relpath, new_pages[relpath], selector)
 
         # figure out which images are newly added, deleted, and common
         logger.info(f"Separating images into new, deleted, and common")
