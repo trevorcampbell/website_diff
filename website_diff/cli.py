@@ -43,13 +43,21 @@ def main(old, new, diff, selector, index):
         old_pages = {os.path.relpath(path, old) : soup for (path, soup) in old_pages.items()}
         new_pages = {os.path.relpath(path, new) : soup for (path, soup) in new_pages.items()}
 
-        # perform render tasks, gather diff targets for old pages
-        old_targets = {}
+        # perform render tasks for old/new pages
+        # (render has to happen for old/new before item diffs, because some rendering might produce items)
         for relpath in old_pages:
             print(f"Rendering page {os.path.join(old, relpath)}")
             for task in render.tasks:
                 print(f"Performing render task: {task}")
                 wd.render.tasks[task](old, relpath, old_pages[relpath], selector)
+        for relpath in new_pages:
+            print(f"Rendering page {os.path.join(new, relpath)}")
+            for task in render.tasks:
+                print(f"Render task: {task}")
+                wd.render.tasks[task](new, relpath, new_pages[relpath], selector)
+
+        old_targets = {}
+        for relpath in old_pages:
             print(f"Gathering diff targets from page {os.path.join(old, relpath)}")
             for item in target.items:
                 print(f"Gathering item: {item}")
@@ -60,11 +68,7 @@ def main(old, new, diff, selector, index):
 
         # perform render tasks, gather diff targets for new pages
         new_targets = {}
-        for relpath in new_pages:
-            print(f"Rendering page {os.path.join(new, relpath)}")
-            for task in render.tasks:
-                print(f"Render task: {task}")
-                wd.render.tasks[task](new, relpath, new_pages[relpath], selector)
+        
             print(f"Gathering diff targets from page {os.path.join(new, relpath)}")
             for item in target.items:
                 print(f"Gathering item: {item}")
