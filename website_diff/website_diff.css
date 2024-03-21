@@ -12,15 +12,15 @@ ins.diff-selected, ins.diff-selected * {
 }
 
 .link-to-diff {
-	color: darkgoldenrod;
+	color: darkgoldenrod !important;
 }
 
-.link-to-new {
-	color: darkgreen;
+.link-to-add {
+	color: darkgreen !important;
 }
 
 .link-to-del {
-	color: darkred;
+	color: darkred !important;
 }
 
 

@@ -4,14 +4,17 @@ import traceback
 import os
 import shutil
 import website_diff as wd
+from bs4 import BeautifulSoup
 from loguru import logger
+
+import pdb
 
 this_dir, this_filename = os.path.split(__file__)
 diffjs_path = os.path.join(this_dir, "website_diff.js")
 diffcss_path = os.path.join(this_dir, "website_diff.css")
 
 logger.remove()
-logger.add(sys.stderr, level="INFO")
+logger.add(sys.stderr, level="DEBUG")
 
 @click.command()
 @click.option('-o', '--old', help='A directory containing the old version of the website (index.html should be in this directory).', required=True)
@@ -84,6 +87,17 @@ def main(old, new, diff, root):
         com_pages = new_pages.intersection(old_pages)
         logger.info(f"{len(com_pages)} common pages")
 
+        # append css and js to added pages
+        for page in add_pages:
+            with open(os.path.join(diff, page), 'r') as f:
+                html = f.read()
+
+            soup = BeautifulSoup(html, 'html.parser')
+            wd.page.append_cssjs(soup)
+
+            with open(os.path.join(diff, page), 'w') as f:
+                f.write(str(soup))
+
         # diff the common pages
         logger.info(f"Diffing common website pages")
         diff_pages = set()
@@ -94,11 +108,10 @@ def main(old, new, diff, root):
             if is_diff:
                 diff_pages.add(page)
 
-        # TODO
         ## loop over all pages, modifying <a> tags that point to pages with diffs with highlights
-        #logger.info(f"Highlighting links to diff'd pages")
-        #for page in new_pages.union(old_pages):
-        #    wd.page.highlight_links(page, diff, add_pages, diff_pages)
+        logger.info(f"Highlighting links to diff'd pages")
+        for page in com_pages.union(new_pages):
+            wd.page.highlight_links(page, diff, add_pages, del_pages, diff_pages)
     except Exception:
         # print the exception
         print(traceback.format_exc())

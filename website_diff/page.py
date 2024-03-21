@@ -1,6 +1,14 @@
 import html_diff
 from bs4 import BeautifulSoup
 import os
+from urllib.parse import urlparse
+from loguru import logger
+
+def append_cssjs(soup):
+    js_soup = BeautifulSoup('<script src="website_diff.js"></script>', 'html.parser')
+    css_soup = BeautifulSoup('<link rel="stylesheet" href="website_diff.css" type="text/css"/>', 'html.parser')
+    soup.select_one("head").append(js_soup)
+    soup.select_one("head").append(css_soup)
 
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
@@ -42,13 +50,8 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
             tag['class'] = tag.get('class',[]) + ['diff']
             is_diff = True
 
-    # if there was a diff, append the js/css files
-    if is_diff:
-        # add the scrolling javascript and style file to highlight the diff
-        js_soup = BeautifulSoup('<script src="website_diff.js"></script>', 'html.parser')
-        css_soup = BeautifulSoup('<link rel="stylesheet" href="website_diff.css" type="text/css"/>', 'html.parser')
-        soup.select_one("head").append(js_soup)
-        soup.select_one("head").append(css_soup)
+    # append the js/css files
+    append_cssjs(soup)
 
     # write the diff
     with open(filepath_out, 'w') as f:
@@ -56,15 +59,17 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
 
     return is_diff
 
-def highlight_links(filepath, root, add_pages, diff_pages, diff_images):
+# def highlight_links(filepath, root, add_pages, diff_pages, diff_images):
+def highlight_links(file, diff, add_pages, del_pages, diff_pages):
     # load the html
-    with open(os.path.join(root, filepath), 'r') as f:
+    logger.debug(f"Opening html file at {os.path.join(diff, file)}")
+    with open(os.path.join(diff, file), 'r') as f:
         html = f.read()
     # parse
     soup = BeautifulSoup(html, 'html.parser')
 
     # current directory
-    curdir = os.path.dirname(filepath)
+    curdir = os.path.dirname(file)
 
     # find all links
     for link in soup.select('a'):
@@ -74,21 +79,27 @@ def highlight_links(filepath, root, add_pages, diff_pages, diff_images):
         ref = ref.split('#')[0]
         # parse the url
         url = urlparse(ref)
-        logger.debug(f"Found link in {filepath}: {ref}")
+        logger.debug(f"Found link in {file}: {ref}")
         logger.debug(f"Parsed link: {url}")
         if not bool(url.netloc) and ref[-5:] == '.html':
             # this is a relative path to an html file. Find path relative to root
-            relative_link_path = os.relpath(os.path.normpath(os.path.join(curdir, ref)), root)
-            if relative_link_path in diff_pages:
+            #relative_link_path = os.path.relpath(os.path.normpath(os.path.join(curdir, ref)), diff)
+            if url.path in diff_pages:
                 logger.debug(f"This is a relative path to a diff'd page. Highlighting")
-                link['class'] = link.get('class', []) + ["link-diff"]
-            elif relative_link_path in add_pages:
+                link['class'] = link.get('class', []) + ["link-to-diff"]
+            elif url.path in add_pages:
                 logger.debug(f"This is a relative path to an added page. Highlighting")
-                link['class'] = link.get('class', []) + ["link-add"]
+                link['class'] = link.get('class', []) + ["link-to-add"]
+            elif url.path in del_pages:
+                logger.debug(f"This is a relative path to a deleted page. Highlighting")
+                link['class'] = link.get('class', []) + ["link-to-del"]
             else:
                 logger.debug(f"This is a relative path, but to an unchanged paged. Skipping")
         else:
             logger.debug(f"Not a relative path, or not an .html file. Skipping")
+
+    with open(os.path.join(diff, file), 'w') as f:
+        f.write(str(soup))
 
     # find all images
     # TODO...
