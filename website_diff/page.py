@@ -4,12 +4,20 @@ import os
 from urllib.parse import urlparse
 from loguru import logger
 
+def soup_diff(old_soup, new_soup):
+    s = BeautifulSoup("", "html.parser")
+    s.extend(html_diff.NodeOtherTag(old_soup, new_soup, True).dump_to_tag_list(s))
+    return s
+
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
     with open(filepath_old, 'r') as f:
         html_old = f.read()
     with open(filepath_new, 'r') as f:
         html_new = f.read()
+
+    soup_old = BeautifulSoup(html_old, "html.parser")
+    soup_new = BeautifulSoup(html_new, "html.parser")
 
     # TODO
     ## remove large data elements (plotly viz, altair viz) prior to diff
@@ -27,8 +35,7 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
     #html_new = str(soup_new)
 
     # generate the html diff
-    hdf = html_diff.diff(html_old, html_new)
-    soup = BeautifulSoup(hdf, 'html.parser')
+    soup = soup_diff(soup_old, soup_new)
 
     is_diff = False
     for tag in soup.select_one(root_element).select('ins'):
