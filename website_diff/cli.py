@@ -4,7 +4,6 @@ import traceback
 import os
 import shutil
 import website_diff as wd
-from bs4 import BeautifulSoup
 from loguru import logger
 
 import pdb
@@ -86,17 +85,6 @@ def main(old, new, diff, root):
         logger.info(f"{len(del_pages)} deleted pages")
         com_pages = new_pages.intersection(old_pages)
         logger.info(f"{len(com_pages)} common pages")
-
-        # append css and js to added pages
-        for page in add_pages:
-            with open(os.path.join(diff, page), 'r') as f:
-                html = f.read()
-
-            soup = BeautifulSoup(html, 'html.parser')
-            wd.page.append_cssjs(soup)
-
-            with open(os.path.join(diff, page), 'w') as f:
-                f.write(str(soup))
 
         # diff the common pages
         logger.info(f"Diffing common website pages")

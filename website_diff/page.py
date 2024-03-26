@@ -4,12 +4,6 @@ import os
 from urllib.parse import urlparse
 from loguru import logger
 
-def append_cssjs(soup):
-    js_soup = BeautifulSoup('<script src="website_diff.js"></script>', 'html.parser')
-    css_soup = BeautifulSoup('<link rel="stylesheet" href="website_diff.css" type="text/css"/>', 'html.parser')
-    soup.select_one("head").append(js_soup)
-    soup.select_one("head").append(css_soup)
-
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
     with open(filepath_old, 'r') as f:
@@ -51,7 +45,10 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
             is_diff = True
 
     # append the js/css files
-    append_cssjs(soup)
+    js_soup = BeautifulSoup('<script src="website_diff.js"></script>', 'html.parser')
+    css_soup = BeautifulSoup('<link rel="stylesheet" href="website_diff.css" type="text/css"/>', 'html.parser')
+    soup.select_one("head").append(js_soup)
+    soup.select_one("head").append(css_soup)
 
     # write the diff
     with open(filepath_out, 'w') as f:
@@ -60,10 +57,10 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
     return is_diff
 
 # def highlight_links(filepath, root, add_pages, diff_pages, diff_images):
-def highlight_links(file, diff, add_pages, del_pages, diff_pages):
+def highlight_links(file, root, add_pages, del_pages, diff_pages):
     # load the html
-    logger.debug(f"Opening html file at {os.path.join(diff, file)}")
-    with open(os.path.join(diff, file), 'r') as f:
+    logger.debug(f"Opening html file at {os.path.join(root, file)}")
+    with open(os.path.join(root, file), 'r') as f:
         html = f.read()
     # parse
     soup = BeautifulSoup(html, 'html.parser')
@@ -98,7 +95,7 @@ def highlight_links(file, diff, add_pages, del_pages, diff_pages):
         else:
             logger.debug(f"Not a relative path, or not an .html file. Skipping")
 
-    with open(os.path.join(diff, file), 'w') as f:
+    with open(os.path.join(root, file), 'w') as f:
         f.write(str(soup))
 
     # find all images
