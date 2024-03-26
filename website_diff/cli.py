@@ -9,8 +9,8 @@ from loguru import logger
 import pdb
 
 this_dir, this_filename = os.path.split(__file__)
-diffjs_path = os.path.join(this_dir, "website_diff.js")
-diffcss_path = os.path.join(this_dir, "website_diff.css")
+diffjs_path = os.path.join(this_dir, "static/website_diff.js")
+diffcss_path = os.path.join(this_dir, "static/website_diff.css")
 
 logger.remove()
 logger.add(sys.stderr, level="DEBUG")
