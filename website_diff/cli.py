@@ -8,19 +8,22 @@ from loguru import logger
 
 import pdb
 
-this_dir, this_filename = os.path.split(__file__)
-diffjs_path = os.path.join(this_dir, "static/website_diff.js")
-diffcss_path = os.path.join(this_dir, "static/website_diff.css")
-
-logger.remove()
-logger.add(sys.stderr, level="DEBUG")
-
 @click.command()
 @click.option('-o', '--old', help='A directory containing the old version of the website (index.html should be in this directory).', required=True)
 @click.option('-n', '--new', help='A directory containing the new version of the website (index.html should be in this directory).', required=True)
 @click.option('-d', '--diff', help='A path to a new directory that will contain the diffed version of the website (this directory should not exist yet).', required=True)
-@click.option('-r', '--root', default='html', help='A BeautifulSoup selector for the root element within which to search for diffs')
-def main(old, new, diff, root):
+@click.option('-s', '--selector', default='html', help='A BeautifulSoup selector for the main content of the page. website_diff will only search inside these elements for diffs')
+@click.option('-i', '--index', default='index.html', help='The main html page filename')
+def main(old, new, diff, selector, index):
+    # get paths for js/css files
+    this_dir, this_filename = os.path.split(__file__)
+    diffjs_path = os.path.join(this_dir, "static/website_diff.js")
+    diffcss_path = os.path.join(this_dir, "static/website_diff.css")
+
+    # set log level to suppress debug messages
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
+
     # copy over the new directory to the diff directory
     # also ensure directory doesn't exist before this code runs
     # copy the js/css to all subdirs (just brute forcing this for now...)
@@ -63,16 +66,16 @@ def main(old, new, diff, root):
         logger.info(f"Highlighting new images")
         for img in add_images:
             logger.info(f"Highlighting new image {img}")
-            wd.image.highlight_add(os.path.join(new, img), os.path.join(diff, img))
+            wd.target.image.highlight_add(os.path.join(new, img), os.path.join(diff, img))
         logger.info(f"Highlighting deleted images")
         for img in del_images:
             logger.info(f"Highlighting deleted image {img}")
-            wd.image.highlight_del(os.path.join(old, img), os.path.join(diff, img))
+            wd.target.image.highlight_del(os.path.join(old, img), os.path.join(diff, img))
         logger.info(f"Diffing common images")
         diff_images = add_images.union(del_images)
         for img in com_images:
             logger.info(f"Diffing image {img}")
-            is_diff = wd.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
+            is_diff = wd.target.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
             logger.info(f"Image diff {img}: {'difference!' if is_diff else 'same'}")
             if is_diff:
                 diff_images.add(img)
@@ -91,7 +94,7 @@ def main(old, new, diff, root):
         diff_pages = set()
         for page in com_pages:
             logger.info(f"Diffing page {page}")
-            is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, diff, os.path.join(diff, page))
+            is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, selector, diff, os.path.join(diff, page))
             logger.info(f"Page diff {page}: {'difference!' if is_diff else 'same'}")
             if is_diff:
                 diff_pages.add(page)
@@ -106,4 +109,4 @@ def main(old, new, diff, root):
 
         # cleanup diff dir if there was a failure
         print(f"Cleaning up directory {diff}")
-        #shutil.rmtree(diff)
+        shutil.rmtree(diff)
