@@ -98,7 +98,7 @@ def main(old, new, diff, root):
 
         ## loop over all pages, modifying <a> tags that point to pages with diffs with highlights
         logger.info(f"Highlighting links to diff'd pages")
-        for page in com_pages.union(new_pages):
+        for page in com_pages:
             wd.page.highlight_links(page, diff, add_pages, del_pages, diff_pages)
     except Exception:
         # print the exception
