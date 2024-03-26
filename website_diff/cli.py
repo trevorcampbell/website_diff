@@ -39,7 +39,7 @@ def main(old, new, diff, selector, index):
         logger.info(f"Crawling old website at {old}")
         old_images = set()
         old_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, old_images)
-        old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), old_gather)
+        old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), selector)
         # make old_images, old_pages relative to old dir
         old_pages = set(os.path.relpath(path, old) for path in old_pages)
         old_images = set(os.path.relpath(path, old) for path in old_images)
@@ -48,7 +48,7 @@ def main(old, new, diff, selector, index):
         logger.info(f"Crawling new website at {new}")
         new_images = set()
         new_gather = lambda filepath, html, soup, root_element : wd.crawler.gather_local_images(filepath, html, soup, root_element, new_images)
-        new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), new_gather)
+        new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), selector)
         # make new_images, new_pages relative to new dir
         new_pages = set(os.path.relpath(path, new) for path in new_pages)
         new_images = set(os.path.relpath(path, new) for path in new_images)
