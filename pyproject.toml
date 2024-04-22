@@ -1,31 +1,15 @@
-[project]
-name = "website_diff"
-version = "0.0.1"
-description = "A simple tool for producing navigable, highlighted diffs of rendered HTML websites"
-requires-python = ">=3.9"
-readme = "README.md"
-license = {file = "LICENSE"}
-authors = [
-    {name = "Trevor Campbell", email = "trevor.d.campbell@gmail.com"},
-]
-dependencies = [
-    "click",
-    "loguru",
-    "beautifulsoup4",
-    "html_diff",
-    "Pillow",
-    "numpy",
-    "vl-convert-python"
-]
-
-[project.scripts]
-website_diff = "website_diff.cli:main"
-
-[tool.setuptools]
-package-data = {"website_diff" = ["*.css", "*.js"]}
-
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["maturin>=1.5,<2.0"]
+build-backend = "maturin"
 
-
+[project]
+name = "webdiff"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+[tool.maturin]
+features = ["pyo3/extension-module"]
