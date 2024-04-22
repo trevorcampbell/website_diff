@@ -1,14 +1,22 @@
 use pyo3::prelude::*;
 
-/// Formats the sum of two numbers as string.
+mod builder;
+mod html;
+mod wu;
+
+
+use builder::build_htmldiff;
+
 #[pyfunction]
-fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
-    Ok((a + b).to_string())
+fn _htmldiff(a: &str, b: &str) -> String {
+    let mut diff = String::new();
+    build_htmldiff(a, b, |s: &str| diff.push_str(s));
+    diff
 }
 
-/// A Python module implemented in Rust.
 #[pymodule]
-fn webdiff(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
+#[pyo3(name="htmldiff")]
+fn htmldiff(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(_htmldiff, m)?)?;
     Ok(())
 }
