@@ -11,7 +11,7 @@ This is particularly useful when the source documents run code whose output may 
 files remain constant.
 
 ## Installation
-Ensure you have Rust and Cargo installed. Instructions can be found [here](https://www.rust-lang.org/tools/install).
+Ensure Rust and Cargo are installed. Instructions can be found [here](https://www.rust-lang.org/tools/install).
 
 ```
 pip install website_diff
