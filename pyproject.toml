@@ -18,7 +18,8 @@ dependencies = [
     "beautifulsoup4",
     "Pillow",
     "numpy",
-    "vl-convert-python"
+    "vl-convert-python",
+    "maturin"
 ]
 classifiers = [
     "Programming Language :: Rust",
