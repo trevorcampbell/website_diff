@@ -60,7 +60,7 @@ def _merge_diffs(soup):
 
             if new_parent.next_sibling:
                 _merge_previous(new_parent.next_sibling)
-                _merge_previous(new_parent)
+            _merge_previous(new_parent)
 
     return
 
