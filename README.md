@@ -14,6 +14,7 @@ files remain constant.
 Ensure Rust and Cargo are installed. Instructions can be found [here](https://www.rust-lang.org/tools/install).
 
 ```
+pip install --upgrade pip
 pip install website_diff
 ```
 
