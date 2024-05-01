@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import bs4
 import os
 from urllib.parse import urlparse
 from loguru import logger
@@ -10,6 +11,58 @@ import pdb
 #     s = BeautifulSoup("", "html.parser")
 #     s.extend(html_diff.NodeOtherTag(old_soup, new_soup, True).dump_to_tag_list(s))
 #     return s
+
+# Helper function that extends the contents of previous sibling with contents of input tag
+# if previous sibling has the same name as input tag.
+def _merge_previous(tag):
+    if tag.previous_sibling is not None and tag.previous_sibling.name == tag.name:
+        prev_sibling = tag.previous_sibling
+        prev_sibling.extend(tag.extract().contents)
+
+# Does a post-order traversal of the htmldiff output BeautifulSoup to find tags that have child ins or del tags.
+# Merges any consecutive child ins or del tags.
+def _merge_diffs(soup):
+    if not soup.html:
+        raise Exception("html tag not found in soup")
+    
+    stack = []
+
+    stack.append(soup.html)
+
+    while stack:
+        parent = stack.pop()
+
+        if parent.contents:
+            next_child = parent.contents[0]
+        else:
+            continue
+
+        while next_child is not None:
+            child = next_child
+            next_child = child.next_sibling
+            if isinstance(child, bs4.element.Tag):
+
+                if child.name in ['ins', 'del']:
+                    _merge_previous(child)
+                else:
+                    stack.append(child)
+
+            else:
+                continue
+        
+        # If there is only an ins or del tag left in children, then propagate that ins or del tag 
+        # onto the parent tag
+        child = parent.contents[0]
+        if len(parent.contents) == 1 and child.name in ['ins', 'del']:
+            new_parent = soup.new_tag(child.name)
+            parent.wrap(new_parent)
+            child.unwrap()
+
+            if new_parent.next_sibling:
+                _merge_previous(new_parent.next_sibling)
+                _merge_previous(new_parent)
+
+    return
 
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
@@ -36,6 +89,8 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
     # generate the html diff
     diff = hd._htmldiff(html_old, html_new)
     soup = BeautifulSoup(diff, "html.parser")
+
+    _merge_diffs(soup)
 
     is_diff = False
     for tag in soup.select_one(root_element).select('ins'):
