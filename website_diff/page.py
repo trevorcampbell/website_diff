@@ -5,64 +5,41 @@ from urllib.parse import urlparse
 from loguru import logger
 import website_diff.htmldiff as hd
 
-import pdb
+# Helper function that extends the contents of previous sibling with contents of input element
+# if previous sibling has the same tag name as input element.
+def _merge_previous(elem):
+    if elem.previous_sibling is not None and elem.previous_sibling.name == elem.name:
+        prev_sibling = elem.previous_sibling
+        prev_sibling.extend(elem.extract().contents)
 
-# def soup_diff(old_soup, new_soup):
-#     s = BeautifulSoup("", "html.parser")
-#     s.extend(html_diff.NodeOtherTag(old_soup, new_soup, True).dump_to_tag_list(s))
-#     return s
+# Does a post-order traversal of the input element to find elements that have child ins or del elements.
+# Merges any consecutive child ins or del elements.
+def _merge_diffs(elem, soup):
+    next_child = None
 
-# Helper function that extends the contents of previous sibling with contents of input tag
-# if previous sibling has the same name as input tag.
-def _merge_previous(tag):
-    if tag.previous_sibling is not None and tag.previous_sibling.name == tag.name:
-        prev_sibling = tag.previous_sibling
-        prev_sibling.extend(tag.extract().contents)
+    if elem.contents:
+        next_child = elem.contents[0]
+    else: 
+        return
 
-# Does a post-order traversal of the htmldiff output BeautifulSoup to find tags that have child ins or del tags.
-# Merges any consecutive child ins or del tags.
-def _merge_diffs(soup):
-    if not soup.html:
-        raise Exception("html tag not found in soup")
-    
-    stack = []
-
-    stack.append(soup.html)
-
-    while stack:
-        parent = stack.pop()
-
-        if parent.contents:
-            next_child = parent.contents[0]
+    while next_child is not None:
+        child = next_child
+        next_child = child.next_sibling
+        if isinstance(child, bs4.element.Tag):
+            _merge_diffs(child, soup)
         else:
             continue
 
-        while next_child is not None:
-            child = next_child
-            next_child = child.next_sibling
-            if isinstance(child, bs4.element.Tag):
+    # If there is only an ins or del element left in children, then propagate that ins or del tag
+    # onto the parent element
+    child = elem.contents[0]
+    if len(elem.contents) == 1 and child.name in ['ins', 'del']:
+        new_elem = soup.new_tag(child.name)
+        elem.wrap(new_elem)
+        child.unwrap()
+        elem = new_elem
 
-                if child.name in ['ins', 'del']:
-                    _merge_previous(child)
-                else:
-                    stack.append(child)
-
-            else:
-                continue
-        
-        # If there is only an ins or del tag left in children, then propagate that ins or del tag 
-        # onto the parent tag
-        child = parent.contents[0]
-        if len(parent.contents) == 1 and child.name in ['ins', 'del']:
-            new_parent = soup.new_tag(child.name)
-            parent.wrap(new_parent)
-            child.unwrap()
-
-            if new_parent.next_sibling:
-                _merge_previous(new_parent.next_sibling)
-            _merge_previous(new_parent)
-
-    return
+    _merge_previous(elem)
 
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
@@ -90,7 +67,10 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
     diff = hd._htmldiff(html_old, html_new)
     soup = BeautifulSoup(diff, "html.parser")
 
-    _merge_diffs(soup)
+    if not soup.html:
+        raise Exception("html tag not found in soup")
+
+    _merge_diffs(soup.html, soup)
 
     is_diff = False
     for tag in soup.select_one(root_element).select('ins'):
