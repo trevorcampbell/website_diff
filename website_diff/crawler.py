@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from loguru import logger
 
-def crawl(filepath, content_selector = 'html', crawled = None):
+def crawl(filepath, gathered, content_selector = 'html', crawled = None):
     # initialize crawl cache
     if crawled is None:
         crawled = {}
@@ -51,14 +51,16 @@ def crawl(filepath, content_selector = 'html', crawled = None):
             if not bool(url.netloc) and ref[-5:] == '.html':
                 # this is a relative path to an html file. Try to find the local html file
                 logger.debug(f"This is a relative path. Trying to crawl {os.path.join(curdir, ref)}")
-                crawl(os.path.join(curdir, ref), content_selector, crawled)
+                crawl(os.path.join(curdir, ref), gathered, content_selector, crawled)
             else:
                 logger.debug(f"Not a relative path, or not an .html file. Skipping")
+
+    gather_local_images(filepath, soup, content_selector, gathered)
 
     # return the set of crawled pages
     return crawled
 
-def gather_local_images(filepath, html, soup, root_element, gathered):
+def gather_local_images(filepath, soup, root_element, gathered):
     logger.debug(f"Finding all images in {filepath}")
     # get current directory name
     curdir = os.path.dirname(filepath)
