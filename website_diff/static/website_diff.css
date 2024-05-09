@@ -11,6 +11,30 @@ ins.diff-selected, ins.diff-selected * {
 	background-color: limegreen;
 }
 
+del.diff > img {
+	border-top: 0.7rem solid lightcoral !important;
+	border-left: 0.7rem solid lightcoral !important;
+	border-right: 0.7rem solid lightcoral !important;
+}
+
+ins.diff > img {
+	border-top: 0.7rem solid lightgreen !important;
+	border-left: 0.7rem solid lightgreen !important;
+	border-right: 0.7rem solid lightgreen !important;
+}
+
+del.diff-selected > img {
+	border-top: 0.7rem solid firebrick !important;
+	border-left: 0.7rem solid firebrick !important;
+	border-right: 0.7rem solid firebrick !important;
+}
+
+ins.diff-selected > img {
+	border-top: 0.7rem solid limegreen !important;
+	border-left: 0.7rem solid limegreen !important;
+	border-right: 0.7rem solid limegreen !important;
+}
+
 .link-to-diff {
 	color: darkgoldenrod !important;
 }
