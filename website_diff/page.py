@@ -39,7 +39,7 @@ def _merge_diffs(elem, soup):
         child.unwrap()
         elem = new_elem
     # Delete element if all it contains is a newline character
-    if len(elem.contents) == 1 and child == '\n':
+    if len(elem.contents) == 1 and elem.name in ['ins', 'del'] and child == '\n':
         elem.decompose()
     else:
         _merge_previous(elem)  
