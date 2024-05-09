@@ -38,8 +38,11 @@ def _merge_diffs(elem, soup):
         elem.wrap(new_elem)
         child.unwrap()
         elem = new_elem
-
-    _merge_previous(elem)
+    # Delete element if all it contains is a newline character
+    if len(elem.contents) == 1 and child == '\n':
+        elem.decompose()
+    else:
+        _merge_previous(elem)  
 
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
