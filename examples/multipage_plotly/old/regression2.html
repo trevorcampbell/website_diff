@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Regression II: linear regression | _main.knit</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Regression II: linear regression | _main.knit" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Regression II: linear regression | _main.knit" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="regression1.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JJ9MD0LBF5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JJ9MD0LBF5');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="source/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="https://datasciencebook.ca">Data Science: A First Introduction</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="regression1.html"><a href="regression1.html"><i class="fa fa-check"></i><b>1</b> Regression I: K-nearest neighbors</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="regression1.html"><a href="regression1.html#overview"><i class="fa fa-check"></i><b>1.1</b> Overview</a></li>
+<li class="chapter" data-level="1.2" data-path="regression1.html"><a href="regression1.html#chapter-learning-objectives"><i class="fa fa-check"></i><b>1.2</b> Chapter learning objectives</a></li>
+<li class="chapter" data-level="1.3" data-path="regression1.html"><a href="regression1.html#the-regression-problem"><i class="fa fa-check"></i><b>1.3</b> The regression problem</a></li>
+<li class="chapter" data-level="1.4" data-path="regression1.html"><a href="regression1.html#exploring-a-data-set"><i class="fa fa-check"></i><b>1.4</b> Exploring a data set</a></li>
+<li class="chapter" data-level="1.5" data-path="regression1.html"><a href="regression1.html#k-nearest-neighbors-regression"><i class="fa fa-check"></i><b>1.5</b> K-nearest neighbors regression</a></li>
+<li class="chapter" data-level="1.6" data-path="regression1.html"><a href="regression1.html#training-evaluating-and-tuning-the-model"><i class="fa fa-check"></i><b>1.6</b> Training, evaluating, and tuning the model</a></li>
+<li class="chapter" data-level="1.7" data-path="regression1.html"><a href="regression1.html#underfitting-and-overfitting"><i class="fa fa-check"></i><b>1.7</b> Underfitting and overfitting</a></li>
+<li class="chapter" data-level="1.8" data-path="regression1.html"><a href="regression1.html#evaluating-on-the-test-set"><i class="fa fa-check"></i><b>1.8</b> Evaluating on the test set</a></li>
+<li class="chapter" data-level="1.9" data-path="regression1.html"><a href="regression1.html#multivariable-k-nn-regression"><i class="fa fa-check"></i><b>1.9</b> Multivariable K-NN regression</a></li>
+<li class="chapter" data-level="1.10" data-path="regression1.html"><a href="regression1.html#strengths-and-limitations-of-k-nn-regression"><i class="fa fa-check"></i><b>1.10</b> Strengths and limitations of K-NN regression</a></li>
+<li class="chapter" data-level="1.11" data-path="regression1.html"><a href="regression1.html#exercises"><i class="fa fa-check"></i><b>1.11</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regression2.html"><a href="regression2.html"><i class="fa fa-check"></i><b>2</b> Regression II: linear regression</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="regression2.html"><a href="regression2.html#overview-1"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="regression2.html"><a href="regression2.html#chapter-learning-objectives-1"><i class="fa fa-check"></i><b>2.2</b> Chapter learning objectives</a></li>
+<li class="chapter" data-level="2.3" data-path="regression2.html"><a href="regression2.html#simple-linear-regression"><i class="fa fa-check"></i><b>2.3</b> Simple linear regression</a></li>
+<li class="chapter" data-level="2.4" data-path="regression2.html"><a href="regression2.html#linear-regression-in-r"><i class="fa fa-check"></i><b>2.4</b> Linear regression in R</a></li>
+<li class="chapter" data-level="2.5" data-path="regression2.html"><a href="regression2.html#comparing-simple-linear-and-k-nn-regression"><i class="fa fa-check"></i><b>2.5</b> Comparing simple linear and K-NN regression</a></li>
+<li class="chapter" data-level="2.6" data-path="regression2.html"><a href="regression2.html#multivariable-linear-regression"><i class="fa fa-check"></i><b>2.6</b> Multivariable linear regression</a></li>
+<li class="chapter" data-level="2.7" data-path="regression2.html"><a href="regression2.html#multicollinearity-and-outliers"><i class="fa fa-check"></i><b>2.7</b> Multicollinearity and outliers</a>
+<ul>
+<li class="chapter" data-level="2.7.1" data-path="regression2.html"><a href="regression2.html#outliers"><i class="fa fa-check"></i><b>2.7.1</b> Outliers</a></li>
+<li class="chapter" data-level="2.7.2" data-path="regression2.html"><a href="regression2.html#multicollinearity"><i class="fa fa-check"></i><b>2.7.2</b> Multicollinearity</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="regression2.html"><a href="regression2.html#designing-new-predictors"><i class="fa fa-check"></i><b>2.8</b> Designing new predictors</a></li>
+<li class="chapter" data-level="2.9" data-path="regression2.html"><a href="regression2.html#the-other-sides-of-regression"><i class="fa fa-check"></i><b>2.9</b> The other sides of regression</a></li>
+<li class="chapter" data-level="2.10" data-path="regression2.html"><a href="regression2.html#exercises-1"><i class="fa fa-check"></i><b>2.10</b> Exercises</a></li>
+<li class="chapter" data-level="2.11" data-path="regression2.html"><a href="regression2.html#additional-resources"><i class="fa fa-check"></i><b>2.11</b> Additional resources</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression2" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Regression II: linear regression<a href="regression2.html#regression2" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="overview-1" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Overview<a href="regression2.html#overview-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Up to this point, we have solved all of our predictive problems—both classification
+and regression—using K-nearest neighbors (K-NN)-based approaches. In the context of regression,
+there is another commonly used method known as <em>linear regression</em>. This chapter provides an introduction
+to the basic concept of linear regression, shows how to use <code>tidymodels</code> to perform linear regression in R,
+and characterizes its strengths and weaknesses compared to K-NN regression. The focus is, as usual,
+on the case where there is a single predictor and single response variable of interest; but the chapter
+concludes with an example using <em>multivariable linear regression</em> when there is more than one
+predictor.</p>
+</div>
+<div id="chapter-learning-objectives-1" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Chapter learning objectives<a href="regression2.html#chapter-learning-objectives-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>By the end of the chapter, readers will be able to do the following:</p>
+<ul>
+<li>Use R to fit simple and multivariable linear regression models on training data.</li>
+<li>Evaluate the linear regression model on test data.</li>
+<li>Compare and contrast predictions obtained from K-nearest neighbors regression to those obtained using linear regression from the same data set.</li>
+<li>Describe how linear regression is affected by outliers and multicollinearity.</li>
+</ul>
+</div>
+<div id="simple-linear-regression" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Simple linear regression<a href="regression2.html#simple-linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>At the end of the previous chapter, we noted some limitations of K-NN regression.
+While the method is simple and easy to understand, K-NN regression does not
+predict well beyond the range of the predictors in the training data, and
+the method gets significantly slower as the training data set grows.
+Fortunately, there is an alternative to K-NN regression—<em>linear regression</em>—that addresses
+both of these limitations. Linear regression is also very commonly
+used in practice because it provides an interpretable mathematical equation that describes
+the relationship between the predictor and response variables. In this first part of the chapter, we will focus on <em>simple</em> linear regression,
+which involves only one predictor variable and one response variable; later on, we will consider
+<em>multivariable</em> linear regression, which involves multiple predictor variables.
+Like K-NN regression, simple linear regression involves
+predicting a numerical response variable (like race time, house price, or height);
+but <em>how</em> it makes those predictions for a new observation is quite different from K-NN regression.
+Instead of looking at the K nearest neighbors and averaging
+over their values for a prediction, in simple linear regression, we create a
+straight line of best fit through the training data and then
+“look up” the prediction using the line.</p>
+<blockquote>
+<p><strong>Note:</strong> Although we did not cover it in earlier chapters, there
+is another popular method for classification called <em>logistic
+regression</em> (it is used for classification even though the name, somewhat confusingly,
+has the word “regression” in it). In logistic regression—similar to linear regression—you
+“fit” the model to the training data and then “look up” the prediction for each new observation.
+Logistic regression and K-NN classification have an advantage/disadvantage comparison
+similar to that of linear regression and K-NN
+regression. It is useful to have a good understanding of linear regression before learning about
+logistic regression. After reading this chapter, see the “Additional Resources” section at the end of the
+classification chapters to learn more about logistic regression. </p>
+</blockquote>
+<p>Let’s return to the Sacramento housing data from Chapter <a href="regression1.html#regression1">1</a> to learn
+how to apply linear regression and compare it to K-NN regression. For now, we
+will consider
+a smaller version of the housing data to help make our visualizations clear.
+Recall our predictive question: can we use the size of a house in the Sacramento, CA area to predict
+its sale price? In particular, recall that we have come across a new 2,000 square-foot house we are interested
+in purchasing with an advertised list price of
+$350,000. Should we offer the list price, or is that over/undervalued?
+To answer this question using simple linear regression, we use the data we have
+to draw the straight line of best fit through our existing data points.
+The small subset of data as well as the line of best fit are shown
+in Figure <a href="regression2.html#fig:08-lin-reg1">2.1</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-lin-reg1"></span>
+<img src="_main_files/figure-html/08-lin-reg1-1.png" alt="Scatter plot of sale price versus size with line of best fit for subset of the Sacramento housing data." width="432"  />
+<p class="caption">
+Figure 2.1: Scatter plot of sale price versus size with line of best fit for subset of the Sacramento housing data.
+</p>
+</div>
+<p>The equation for the straight line is: </p>
+<p><span class="math display">\[\text{house sale price} = \beta_0 + \beta_1 \cdot (\text{house size}),\]</span>
+where</p>
+<ul>
+<li><span class="math inline">\(\beta_0\)</span> is the <em>vertical intercept</em> of the line (the price when house size is 0)</li>
+<li><span class="math inline">\(\beta_1\)</span> is the <em>slope</em> of the line (how quickly the price increases as you increase house size)</li>
+</ul>
+<p>Therefore using the data to find the line of best fit is equivalent to finding coefficients
+<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> that <em>parametrize</em> (correspond to) the line of best fit.
+Now of course, in this particular problem, the idea of a 0 square-foot house is a bit silly;
+but you can think of <span class="math inline">\(\beta_0\)</span> here as the “base price,” and
+<span class="math inline">\(\beta_1\)</span> as the increase in price for each square foot of space.
+Let’s push this thought even further: what would happen in the equation for the line if you
+tried to evaluate the price of a house with size 6 <em>million</em> square feet?
+Or what about <em>negative</em> 2,000 square feet? As it turns out, nothing in the formula breaks; linear
+regression will happily make predictions for nonsensical predictor values if you ask it to. But even though
+you <em>can</em> make these wild predictions, you shouldn’t. You should only make predictions roughly within
+the range of your original data, and perhaps a bit beyond it only if it makes sense. For example,
+the data in Figure <a href="regression2.html#fig:08-lin-reg1">2.1</a> only reaches around 800 square feet on the low end, but
+it would probably be reasonable to use the linear regression model to make a prediction at 600 square feet, say.</p>
+<p>Back to the example! Once we have the coefficients <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>, we can use the equation
+above to evaluate the predicted sale price given the value we have for the
+predictor variable—here 2,000 square feet. Figure
+<a href="regression2.html#fig:08-lin-reg2">2.2</a> demonstrates this process.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-lin-reg2"></span>
+<img src="_main_files/figure-html/08-lin-reg2-1.png" alt="Scatter plot of sale price versus size with line of best fit and a red dot at the predicted sale price for a 2,000 square-foot home." width="432" />
+<p class="caption">
+Figure 2.2: Scatter plot of sale price versus size with line of best fit and a red dot at the predicted sale price for a 2,000 square-foot home.
+</p>
+</div>
+<p>By using simple linear regression on this small data set to predict the sale price
+for a 2,000 square-foot house, we get a predicted value of
+$295,564. But wait a minute… how
+exactly does simple linear regression choose the line of best fit? Many
+different lines could be drawn through the data points.
+Some plausible examples are shown in Figure <a href="regression2.html#fig:08-several-lines">2.3</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-several-lines"></span>
+<img src="_main_files/figure-html/08-several-lines-1.png" alt="Scatter plot of sale price versus size with many possible lines that could be drawn through the data points." width="432" />
+<p class="caption">
+Figure 2.3: Scatter plot of sale price versus size with many possible lines that could be drawn through the data points.
+</p>
+</div>
+<p>Simple linear regression chooses the straight line of best fit by choosing
+the line that minimizes the <strong>average squared vertical distance</strong> between itself and
+each of the observed data points in the training data. Figure <a href="regression2.html#fig:08-verticalDistToMin">2.4</a> illustrates
+these vertical distances as red lines. Finally, to assess the predictive
+accuracy of a simple linear regression model,
+we use RMSPE—the same measure of predictive performance we used with K-NN regression.
+</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-verticalDistToMin"></span>
+<img src="_main_files/figure-html/08-verticalDistToMin-1.png" alt="Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points." width="432" />
+<p class="caption">
+Figure 2.4: Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points.
+</p>
+</div>
+</div>
+<div id="linear-regression-in-r" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Linear regression in R<a href="regression2.html#linear-regression-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We can perform simple linear regression in R using <code>tidymodels</code> in a
+very similar manner to how we performed K-NN regression.
+To do this, instead of creating a <code>nearest_neighbor</code> model specification with
+the <code>kknn</code> engine, we use a <code>linear_reg</code> model specification
+with the <code>lm</code> engine. Another difference is that we do not need to choose <span class="math inline">\(K\)</span> in the
+context of linear regression, and so we do not need to perform cross-validation.
+Below we illustrate how we can use the usual <code>tidymodels</code> workflow to predict house sale
+price given house size using a simple linear regression approach using the full
+Sacramento real estate data set.</p>
+<p>As usual, we start by loading packages, setting the seed, loading data, and putting some test data away in a lock box that we
+can come back to after we choose our final model. Let’s take care of that now.
+</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="regression2.html#cb26-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb26-2"><a href="regression2.html#cb26-2" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb26-3"><a href="regression2.html#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="regression2.html#cb26-4" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb26-5"><a href="regression2.html#cb26-5" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="regression2.html#cb26-6" tabindex="-1"></a>sacramento <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/sacramento.csv&quot;</span>)</span>
+<span id="cb26-7"><a href="regression2.html#cb26-7" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="regression2.html#cb26-8" tabindex="-1"></a>sacramento_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(sacramento, <span class="at">prop =</span> <span class="fl">0.75</span>, <span class="at">strata =</span> price)</span>
+<span id="cb26-9"><a href="regression2.html#cb26-9" tabindex="-1"></a>sacramento_train <span class="ot">&lt;-</span> <span class="fu">training</span>(sacramento_split)</span>
+<span id="cb26-10"><a href="regression2.html#cb26-10" tabindex="-1"></a>sacramento_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(sacramento_split)</span></code></pre></div>
+<p>Now that we have our training data, we will create the model specification
+and recipe, and fit our simple linear regression model:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="regression2.html#cb27-1" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="regression2.html#cb27-2" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;lm&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="regression2.html#cb27-3" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;regression&quot;</span>)</span>
+<span id="cb27-4"><a href="regression2.html#cb27-4" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="regression2.html#cb27-5" tabindex="-1"></a>lm_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(price <span class="sc">~</span> sqft, <span class="at">data =</span> sacramento_train)</span>
+<span id="cb27-6"><a href="regression2.html#cb27-6" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="regression2.html#cb27-7" tabindex="-1"></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-8"><a href="regression2.html#cb27-8" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lm_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb27-9"><a href="regression2.html#cb27-9" tabindex="-1"></a>  <span class="fu">add_model</span>(lm_spec) <span class="sc">|&gt;</span></span>
+<span id="cb27-10"><a href="regression2.html#cb27-10" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> sacramento_train)</span>
+<span id="cb27-11"><a href="regression2.html#cb27-11" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="regression2.html#cb27-12" tabindex="-1"></a>lm_fit</span></code></pre></div>
+<pre><code>## ══ Workflow [trained] ══════════
+## Preprocessor: Recipe
+## Model: linear_reg()
+## 
+## ── Preprocessor ──────────
+## 0 Recipe Steps
+## 
+## ── Model ──────────
+## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+## (Intercept)         sqft  
+##     18450.3        134.8</code></pre>
+<blockquote>
+<p><strong>Note:</strong> An additional difference that you will notice here is that we do
+not standardize (i.e., scale and center) our
+predictors. In K-nearest neighbors models, recall that the model fit changes
+depending on whether we standardize first or not. In linear regression,
+standardization does not affect the fit (it <em>does</em> affect the coefficients in
+the equation, though!). So you can standardize if you want—it won’t
+hurt anything—but if you leave the predictors in their original form,
+the best fit coefficients are usually easier to interpret afterward.</p>
+</blockquote>
+<p>Our coefficients are
+(intercept) <span class="math inline">\(\beta_0=\)</span> 18450
+and (slope) <span class="math inline">\(\beta_1=\)</span> 135.
+This means that the equation of the line of best fit is</p>
+<p><span class="math display">\[\text{house sale price} = 18450 + 135\cdot (\text{house size}).\]</span></p>
+<p>In other words, the model predicts that houses
+start at $18,450 for 0 square feet, and that
+every extra square foot increases the cost of
+the house by $135. Finally,
+we predict on the test data set to assess how well our model does:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="regression2.html#cb29-1" tabindex="-1"></a>lm_test_results <span class="ot">&lt;-</span> lm_fit <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="regression2.html#cb29-2" tabindex="-1"></a>  <span class="fu">predict</span>(sacramento_test) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="regression2.html#cb29-3" tabindex="-1"></a>  <span class="fu">bind_cols</span>(sacramento_test) <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a href="regression2.html#cb29-4" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> price, <span class="at">estimate =</span> .pred)</span>
+<span id="cb29-5"><a href="regression2.html#cb29-5" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="regression2.html#cb29-6" tabindex="-1"></a>lm_test_results</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard   88528.   
+## 2 rsq     standard       0.608
+## 3 mae     standard   61892.</code></pre>
+<p>Our final model’s test error as assessed by RMSPE
+is $88,528.
+Remember that this is in units of the response variable, and here that
+is US Dollars (USD). Does this mean our model is “good” at predicting house
+sale price based off of the predictor of home size? Again, answering this is
+tricky and requires knowledge of how you intend to use the prediction.</p>
+<p>To visualize the simple linear regression model, we can plot the predicted house
+sale price across all possible house sizes we might encounter.
+Since our model is linear,
+we only need to compute the predicted price of the minimum and maximum house size,
+and then connect them with a straight line.
+We superimpose this prediction line on a scatter
+plot of the original housing price data,
+so that we can qualitatively assess if the model seems to fit the data well.
+Figure <a href="regression2.html#fig:08-lm-predict-all">2.5</a> displays the result.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="regression2.html#cb31-1" tabindex="-1"></a>sqft_prediction_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb31-2"><a href="regression2.html#cb31-2" tabindex="-1"></a>    <span class="at">sqft =</span> <span class="fu">c</span>(</span>
+<span id="cb31-3"><a href="regression2.html#cb31-3" tabindex="-1"></a>        sacramento <span class="sc">|&gt;</span> <span class="fu">select</span>(sqft) <span class="sc">|&gt;</span> <span class="fu">min</span>(),</span>
+<span id="cb31-4"><a href="regression2.html#cb31-4" tabindex="-1"></a>        sacramento <span class="sc">|&gt;</span> <span class="fu">select</span>(sqft) <span class="sc">|&gt;</span> <span class="fu">max</span>()</span>
+<span id="cb31-5"><a href="regression2.html#cb31-5" tabindex="-1"></a>    )</span>
+<span id="cb31-6"><a href="regression2.html#cb31-6" tabindex="-1"></a>)</span>
+<span id="cb31-7"><a href="regression2.html#cb31-7" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="regression2.html#cb31-8" tabindex="-1"></a>sacr_preds <span class="ot">&lt;-</span> lm_fit <span class="sc">|&gt;</span></span>
+<span id="cb31-9"><a href="regression2.html#cb31-9" tabindex="-1"></a>  <span class="fu">predict</span>(sqft_prediction_grid) <span class="sc">|&gt;</span></span>
+<span id="cb31-10"><a href="regression2.html#cb31-10" tabindex="-1"></a>  <span class="fu">bind_cols</span>(sqft_prediction_grid)</span>
+<span id="cb31-11"><a href="regression2.html#cb31-11" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="regression2.html#cb31-12" tabindex="-1"></a>lm_plot_final <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(sacramento, <span class="fu">aes</span>(<span class="at">x =</span> sqft, <span class="at">y =</span> price)) <span class="sc">+</span></span>
+<span id="cb31-13"><a href="regression2.html#cb31-13" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb31-14"><a href="regression2.html#cb31-14" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> sacr_preds,</span>
+<span id="cb31-15"><a href="regression2.html#cb31-15" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> sqft, <span class="at">y =</span> .pred),</span>
+<span id="cb31-16"><a href="regression2.html#cb31-16" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb31-17"><a href="regression2.html#cb31-17" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;House size (square feet)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb31-18"><a href="regression2.html#cb31-18" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Price (USD)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb31-19"><a href="regression2.html#cb31-19" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">dollar_format</span>()) <span class="sc">+</span></span>
+<span id="cb31-20"><a href="regression2.html#cb31-20" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span>
+<span id="cb31-21"><a href="regression2.html#cb31-21" tabindex="-1"></a></span>
+<span id="cb31-22"><a href="regression2.html#cb31-22" tabindex="-1"></a>lm_plot_final</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-lm-predict-all"></span>
+<img src="_main_files/figure-html/08-lm-predict-all-1.png" alt="Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data." width="432"  />
+<p class="caption">
+Figure 2.5: Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data.
+</p>
+</div>
+<p>We can extract the coefficients from our model by accessing the
+fit object that is output by the <code>fit</code> function; we first have to extract
+it from the workflow using the <code>extract_fit_parsnip</code> function, and then apply
+the <code>tidy</code> function to convert the result into a data frame:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="regression2.html#cb32-1" tabindex="-1"></a>coeffs <span class="ot">&lt;-</span> lm_fit <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="regression2.html#cb32-2" tabindex="-1"></a>             <span class="fu">extract_fit_parsnip</span>() <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="regression2.html#cb32-3" tabindex="-1"></a>             <span class="fu">tidy</span>()</span>
+<span id="cb32-4"><a href="regression2.html#cb32-4" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="regression2.html#cb32-5" tabindex="-1"></a>coeffs</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   18450.   7916.        2.33 2.01e-  2
+## 2 sqft            135.      4.31     31.2  1.37e-134</code></pre>
+</div>
+<div id="comparing-simple-linear-and-k-nn-regression" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Comparing simple linear and K-NN regression<a href="regression2.html#comparing-simple-linear-and-k-nn-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now that we have a general understanding of both simple linear and K-NN
+regression, we can start to compare and contrast these methods as well as the
+predictions made by them. To start, let’s look at the visualization of the
+simple linear regression model predictions for the Sacramento real estate data
+(predicting price from house size) and the “best” K-NN regression model
+obtained from the same problem, shown in Figure <a href="regression2.html#fig:08-compareRegression">2.6</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-compareRegression"></span>
+<img src="_main_files/figure-html/08-compareRegression-1.png" alt="Comparison of simple linear regression and K-NN regression." width="960" />
+<p class="caption">
+Figure 2.6: Comparison of simple linear regression and K-NN regression.
+</p>
+</div>
+<p>What differences do we observe in Figure <a href="regression2.html#fig:08-compareRegression">2.6</a>? One obvious
+difference is the shape of the blue lines. In simple linear regression we are
+restricted to a straight line, whereas in K-NN regression our line is much more
+flexible and can be quite wiggly. But there is a major interpretability advantage in limiting the
+model to a straight line. A
+straight line can be defined by two numbers, the
+vertical intercept and the slope. The intercept tells us what the prediction is when
+all of the predictors are equal to 0; and the slope tells us what unit increase in the response
+variable we predict given a unit increase in the predictor
+variable. K-NN regression, as simple as it is to implement and understand, has no such
+interpretability from its wiggly line.</p>
+<p>There can, however, also be a disadvantage to using a simple linear regression
+model in some cases, particularly when the relationship between the response and
+the predictor is not linear, but instead some other shape (e.g., curved or oscillating). In
+these cases the prediction model from a simple linear regression
+will underfit (have high bias), meaning that model/predicted values do not
+match the actual observed values very well. Such a model would probably have a
+quite high RMSE when assessing model goodness of fit on the training data and
+a quite high RMSPE when assessing model prediction quality on a test data
+set. On such a data set, K-NN regression may fare better. Additionally, there
+are other types of regression you can learn about in future books that may do
+even better at predicting with such data.</p>
+<p>How do these two models compare on the Sacramento house prices data set? In
+Figure <a href="regression2.html#fig:08-compareRegression">2.6</a>, we also printed the RMSPE as calculated from
+predicting on the test data set that was not used to train/fit the models. The RMSPE for the simple linear
+regression model is slightly lower than the RMSPE for the K-NN regression model.
+Considering that the simple linear regression model is also more interpretable,
+if we were comparing these in practice we would likely choose to use the simple
+linear regression model.</p>
+<p>Finally, note that the K-NN regression model becomes “flat”
+at the left and right boundaries of the data, while the linear model
+predicts a constant slope. Predicting outside the range of the observed
+data is known as <em>extrapolation</em>; K-NN and linear models behave quite differently
+when extrapolating. Depending on the application, the flat
+or constant slope trend may make more sense. For example, if our housing
+data were slightly different, the linear model may have actually predicted
+a <em>negative</em> price for a small house (if the intercept <span class="math inline">\(\beta_0\)</span> was negative),
+which obviously does not match reality. On the other hand, the trend of increasing
+house size corresponding to increasing house price probably continues for large houses,
+so the “flat” extrapolation of K-NN likely does not match reality.</p>
+</div>
+<div id="multivariable-linear-regression" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Multivariable linear regression<a href="regression2.html#multivariable-linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As in K-NN classification and K-NN regression, we can move beyond the simple
+case of only one predictor to the case with multiple predictors,
+known as <em>multivariable linear regression</em>.
+To do this, we follow a very similar approach to what we did for
+K-NN regression: we just add more predictors to the model formula in the
+recipe. But recall that we do not need to use cross-validation to choose any parameters,
+nor do we need to standardize (i.e., center and scale) the data for linear regression.
+Note once again that we have the same concerns regarding multiple predictors
+as in the settings of multivariable K-NN regression and classification: having more predictors is <strong>not</strong> always
+better. But because the same predictor selection
+algorithm from the classification chapter extends to the setting of linear regression,
+it will not be covered again in this chapter.</p>
+<p>We will demonstrate multivariable linear regression using the Sacramento real estate
+data with both house size
+(measured in square feet) as well as number of bedrooms as our predictors, and
+continue to use house sale price as our response variable. We will start by
+changing the formula in the recipe to
+include both the <code>sqft</code> and <code>beds</code> variables as predictors:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="regression2.html#cb34-1" tabindex="-1"></a>mlm_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(price <span class="sc">~</span> sqft <span class="sc">+</span> beds, <span class="at">data =</span> sacramento_train)</span></code></pre></div>
+<p>Now we can build our workflow and fit the model:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="regression2.html#cb35-1" tabindex="-1"></a>mlm_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="regression2.html#cb35-2" tabindex="-1"></a>  <span class="fu">add_recipe</span>(mlm_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="regression2.html#cb35-3" tabindex="-1"></a>  <span class="fu">add_model</span>(lm_spec) <span class="sc">|&gt;</span></span>
+<span id="cb35-4"><a href="regression2.html#cb35-4" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> sacramento_train)</span>
+<span id="cb35-5"><a href="regression2.html#cb35-5" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="regression2.html#cb35-6" tabindex="-1"></a>mlm_fit</span></code></pre></div>
+<pre><code>## ══ Workflow [trained] ══════════
+## Preprocessor: Recipe
+## Model: linear_reg()
+## 
+## ── Preprocessor ──────────
+## 0 Recipe Steps
+## 
+## ── Model ──────────
+## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+## (Intercept)         sqft         beds  
+##     72547.8        160.6     -29644.3</code></pre>
+<p>And finally, we make predictions on the test data set to assess the quality of our model:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="regression2.html#cb37-1" tabindex="-1"></a>lm_mult_test_results <span class="ot">&lt;-</span> mlm_fit <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="regression2.html#cb37-2" tabindex="-1"></a>  <span class="fu">predict</span>(sacramento_test) <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="regression2.html#cb37-3" tabindex="-1"></a>  <span class="fu">bind_cols</span>(sacramento_test) <span class="sc">|&gt;</span></span>
+<span id="cb37-4"><a href="regression2.html#cb37-4" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> price, <span class="at">estimate =</span> .pred)</span>
+<span id="cb37-5"><a href="regression2.html#cb37-5" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="regression2.html#cb37-6" tabindex="-1"></a>lm_mult_test_results</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard   88739.   
+## 2 rsq     standard       0.603
+## 3 mae     standard   61732.</code></pre>
+<p>Our model’s test error as assessed by RMSPE
+is $88,739.
+In the case of two predictors, we can plot the predictions made by our linear regression creates a <em>plane</em> of best fit, as
+shown in Figure <a href="regression2.html#fig:08-3DlinReg">2.7</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-3DlinReg"></span>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-bec0e095c22117657829" style="width:100%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-bec0e095c22117657829">{"x":{"visdat":{"151d82ef6":["function () ","plotlyVisDat"],"12dca6ad6":["function () ","data"]},"cur_data":"12dca6ad6","attrs":{"12dca6ad6":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"type":"scatter3d","mode":"markers","marker":{"size":2,"opacity":0.40000000000000002,"color":"red"},"inherit":true},"12dca6ad6.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"type":"surface","x":{},"y":{},"colorbar":{"title":"Price (USD)"},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Size (sq ft)"},"zaxis":{"title":"Price (USD)"},"yaxis":{"title":"Bedrooms"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[836,1167,796,1122,1177,941,1146,909,1289,871,1020,1022,1134,844,795,1118,1329,1240,901,1088,1119,1039,1152,1380,1116,1039,1418,1082,1472,1146,760,1304,1207,795,1099,840,746,1067,1337,924,1516,1220,722,722,1080,1039,1051,967,1050,1110,888,1120,1080,1264,1080,1266,994,1202,1039,722,1448,1183,1320,1117,1364,1310,1006,1104,810,1123,840,623,932,796,834,924,795,1250,1013,1012,795,918,1082,1404,625,888,1120,1331,1014,1448,966,779,836,1100,1207,1995,804,958,1366,696,1080,1390,1354,795,780,1587,1209,1139,1690,1245,1416,1300,1590,1516,1057,1370,1370,1166,1000,838,1080,990,861,906,1089,832,1292,810,911,1320,1410,1115,1169,1164,1341,1127,1253,1120,1118,1890,1260,1400,1264,1132,1466,1092,960,1075,1512,611,1011,1158,1092,1051,682,1161,1004,1229,1249,1161,1010,1005,1462,1269,1570,1093,962,1127,970,1000,1065,1206,1285,1543,1392,924,1056,1043,1587,1580,1955,1656,1477,1188,1590,1463,1406,1943,1172,1851,1130,1603,1479,1420,1280,1586,1362,2162,1266,1820,936,1665,1511,1590,904,1156,1321,1439,1159,1671,1716,1685,1120,1174,1393,1415,2126,1799,1308,1953,723,1376,948,1578,1317,1360,1351,1452,1162,1182,1100,1280,1280,1039,1204,1120,1638,1152,1154,1353,1329,1356,1009,1144,930,1766,1940,1776,1258,1872,1112,1856,1939,998,1758,2142,1428,1358,2475,1410,1711,1140,1410,1240,1712,1580,1029,1103,2161,1650,1320,1200,1170,1157,1410,1593,1093,1328,1273,1578,796,1386,1452,1513,1232,1578,1498,1473,1127,1144,972,2306,1479,1040,1953,984,1351,1284,1376,1300,1566,1115,1032,1419,1670,1488,1373,1381,1265,881,1917,1608,1344,1202,1859,1232,1582,904,1340,1204,1477,1497,960,1194,1428,1039,1529,1887,1294,1638,1677,1073,1231,1416,1358,1609,1968,1089,1296,1189,1371,1740,1450,1416,888,1302,1418,1462,1319,1770,1596,2136,1616,1478,1287,1277,1448,2235,2093,1193,2163,1269,1473,958,2508,1305,1591,1326,1921,1541,1018,1713,1672,1446,1284,3009,3612,2056,1993,1857,1126,1520,2800,1360,1522,1751,1475,1216,1315,2187,1129,1453,1503,1269,1176,1456,1498,2085,2170,1595,1567,2943,1253,1768,2030,1531,2056,2494,1450,2169,1527,1401,1411,2990,2307,1329,1910,1981,1739,1516,988,1555,1212,1871,1302,756,2026,1250,1187,1324,1936,2382,1798,2652,1816,3076,1844,1306,2447,1176,1182,1160,1424,1574,1830,1724,1255,1718,1808,1713,2724,2550,1928,1922,1510,960,1624,2992,1524,1248,1876,2489,1851,1637,1338,1257,2254,1441,1991,2126,1094,1462,2258,2111,1915,2367,1962,1406,1876,1235,2504,1899,1828,1438,1451,1520,2605,1196,1621,1811,1540,2647,2750,1543,2494,1650,2280,1443,1857,1735,2096,1720,2160,1282,1721,1328,1919,1982,1144,1623,2555,1577,2592,1401,1627,960,1456,1450,1358,1329,2280,1477,1685,1362,2309,2367,3516,2536,1914,1690,2725,2354,1842,1801,1961,3134,1915,2734,2110,3599,2054,1830,3440,2846,2359,3433,3615,2724,3508,2462,2900,3705,3527,2325,4878,1829,1665,3072,1449,2575,539,2208,1108,1595,2159,2295,1838,1900,3389,2190,2607,2724,3746,3969,3192,2829,3928,3577,2581,3992,3397,3881,1598,1929,2272,3117,2222,3059,2846,1829,2218,1394,1410,3468,2346,2347,1659,2590,2155,1673,2789,1606,2166,1871,1800,1683,1625,2752,1596,2716,1639,3281,1697,1993,2085,2548,2730,1939,1788,1691,2002,4246,2962,3056,3198,1905,1320,1873,3741,2660,3357,2896,2025,3788,2048,1502,1327,1800,2169,2457,2264,2004,3134,1360,1951,1276,2962,1888,2155,1744,1548,1322,2484,2212,1616,2606,2877,2960,1704,2100,1924,2295,2577,2616,1727,1485,1655,2049,3042,2875,3566,1304,2334,1493,1944,3913,3151,2787,3261,2053,2379,2480,2418,3282,4091,2806,3173,3380,1348,4090,1252,3229,3863,3901,2356,3579,3782,4400],"y":[2,3,2,3,3,2,3,3,3,1,3,2,2,2,2,3,4,4,3,3,3,2,3,3,3,2,3,3,4,4,1,2,3,2,4,2,2,3,3,3,3,2,1,1,3,3,3,2,3,3,3,3,3,3,3,3,2,3,2,2,4,4,3,3,3,4,2,3,2,2,2,2,2,2,2,2,2,3,3,3,2,2,3,4,1,2,4,3,3,4,3,2,2,2,3,4,2,2,3,3,3,4,4,2,2,4,3,2,2,3,3,3,4,5,2,3,3,3,1,2,2,2,2,2,3,2,4,2,2,3,3,3,3,3,4,4,4,3,2,4,3,3,3,2,3,3,3,3,4,1,2,4,3,3,1,3,3,3,3,3,3,2,4,3,4,3,3,3,2,3,1,3,3,3,4,2,3,2,4,4,4,4,3,3,4,3,3,4,3,4,3,4,3,3,3,3,3,4,3,3,3,2,3,4,2,3,2,3,3,3,3,4,4,3,3,3,4,4,3,4,2,2,2,4,3,3,4,3,2,3,3,4,4,3,3,3,4,3,3,3,3,3,3,3,2,4,4,4,3,4,2,4,4,3,3,3,3,4,6,3,3,3,3,3,5,4,3,3,3,3,3,3,3,3,3,3,3,3,3,4,2,3,3,3,3,4,2,3,3,3,3,4,3,2,4,1,3,3,4,3,4,2,2,4,3,3,3,4,3,2,4,4,3,3,4,3,3,2,3,3,4,4,3,1,3,3,3,4,3,3,3,3,3,3,3,4,4,2,3,2,3,4,3,3,3,3,3,3,4,4,4,5,4,3,3,4,4,4,3,3,3,3,3,3,5,3,4,2,4,3,3,4,3,3,2,4,8,4,4,3,2,2,5,3,3,4,4,3,2,3,2,3,3,2,3,4,3,5,3,4,3,4,4,4,4,3,4,4,3,4,3,3,3,4,4,3,4,3,4,3,3,4,3,4,3,2,4,2,3,2,4,5,4,4,4,5,4,3,4,4,4,3,3,4,3,4,2,3,4,3,4,4,4,3,3,2,3,5,4,3,4,5,4,2,3,2,5,3,4,4,3,3,5,4,4,4,3,2,4,3,4,4,3,4,3,3,4,3,3,3,3,4,2,3,5,3,5,3,3,3,4,3,4,3,4,4,3,4,2,2,6,3,5,3,4,3,3,3,3,4,4,3,4,3,4,5,5,4,4,2,3,4,3,4,3,4,4,4,3,5,4,4,4,3,4,5,5,4,5,4,5,4,4,3,6,3,3,5,2,3,2,4,3,4,4,4,3,4,5,4,4,4,5,5,4,3,5,5,4,4,4,5,2,4,4,5,4,4,5,3,4,3,3,5,5,5,4,4,4,3,4,4,4,4,3,3,3,4,2,4,3,5,3,3,4,3,4,4,2,3,4,5,4,4,3,3,3,2,5,4,4,5,3,5,4,3,3,4,4,5,3,4,5,3,4,3,4,4,3,3,3,2,4,3,3,5,5,3,2,3,3,4,4,5,3,3,3,3,4,5,5,2,3,3,3,5,5,5,4,4,4,3,3,4,5,4,3,4,3,4,2,4,5,5,4,5,4,4],"z":[59222,68212,68880,89921,91002,94905,98937,100309,106250,106852,107502,108750,110700,113263,116250,122000,122682,123000,125000,126640,129000,133000,134555,136500,138750,141000,146250,147308,148750,149593,150000,152000,154000,69000,70000,71000,78400,80000,90000,92000,97750,98000,98000,100000,106716,111000,111000,114800,123225,123750,125000,125000,126000,135500,140000,140000,142500,143500,145000,145000,145000,146000,148500,149000,150000,150000,152000,156000,156000,156000,40000,62050,65000,65000,68000,77000,82732,84000,85000,90000,90000,91000,95000,100000,100000,101000,102750,112500,113000,114000,114000,114750,115000,115000,119250,120000,120000,120000,120108,121725,122000,125573,126714,126960,127000,127500,130000,133105,136500,139500,140000,140800,147000,150000,150000,155435,155500,30000,30000,55422,65000,66500,75000,77000,95625,96140,105000,108000,115000,115500,115620,116000,122000,122500,123000,124000,125000,130000,131750,137721,137760,138000,140000,145000,150000,150000,155000,155800,56950,60000,70000,80000,85500,105000,107666,109000,110000,110000,112500,114800,116000,119000,121500,122000,126854,127059,128687,130000,132000,134000,138000,142000,143012,145846,150000,150454,156896,161250,161500,165000,166357,166357,168000,170000,173000,174250,178760,179580,181000,182587,182750,183200,188741,189000,192067,194000,194818,195000,198000,200000,200000,206000,208000,212864,157788,161653,161829,168000,169000,175000,180400,182000,189000,195000,200000,201000,202500,205000,205000,205000,207000,210000,211500,215000,215000,215500,158000,160000,164000,164000,167000,167293,167293,168000,174000,178000,180000,188325,191500,192000,192700,195000,198000,200345,203000,207000,208000,210000,212000,213675,213697,215000,215000,215100,217500,218000,156142,158000,159900,160000,161500,162000,165000,167293,168000,168000,168750,170000,170250,173000,175000,176095,176250,180000,180000,181000,182000,188335,190000,190000,190000,191250,193000,193500,194818,195000,195000,195000,199900,200000,201000,204918,205000,205000,207744,210944,215000,215000,215000,216033,220000,220000,220000,220000,157296,160000,160000,161250,164000,165000,165000,165750,166000,169000,170000,170000,172000,173056,174000,174250,176850,179500,185000,188000,188700,189000,189000,190000,191250,191675,195500,198000,200000,200000,201528,204750,205000,205000,205900,207000,208250,211500,213000,216000,216021,219794,220000,220000,220000,220000,221000,223058,227887,231477,234697,235000,236000,236685,237800,240122,242638,244000,244500,244960,245918,250000,250000,250134,254200,260000,260014,263500,265000,275086,280908,280987,282400,285000,287417,291000,292024,299000,304037,222381,225000,225000,229665,230000,230000,235000,240000,242000,245000,245000,250000,250000,250000,256054,257729,260000,261000,261800,264469,265000,270000,270000,275000,280000,286013,292000,293993,294000,296769,297500,300000,300000,300500,305000,221000,222900,223139,225500,228327,230000,230000,230522,231200,232500,234000,234500,235000,236000,238861,239700,240000,240000,241000,245000,246000,247234,247480,249862,251000,252155,254172,258000,260000,261000,262500,266000,274425,277980,280000,284686,285000,285000,289000,295000,296056,297359,299940,304000,305000,220702,222000,222500,222750,225000,225000,228750,229000,230095,232500,233500,240000,240000,240971,242000,243500,246544,246750,249000,250000,252000,255000,255000,257200,260000,260000,263500,266510,267750,270000,275000,276000,276500,279000,280000,285000,288000,289000,290000,290000,294000,294173,295000,298000,298000,299000,300000,300000,300567,303000,305000,223000,224252,225000,228000,229027,229500,232425,234000,235301,235738,311000,315537,320000,320000,328360,334150,335750,335750,339500,346210,347029,347650,351300,370500,372000,381300,381942,387731,394470,395000,400186,425000,430000,461000,510000,539000,585000,600000,606238,660000,830000,306500,312500,315000,330000,331000,334000,336000,339000,339000,345000,350000,356000,361745,370000,380000,402000,406026,420000,425000,425000,433500,436746,438700,450000,460000,465000,471750,484000,485000,500500,541000,582000,614000,680000,307000,311328,313138,316630,320000,320000,325000,328578,331500,340000,344755,351000,353767,356035,360552,362305,365000,367554,368500,370000,371086,388000,395100,400000,400000,408431,413000,420000,423000,427500,430922,445000,452000,471000,475000,487500,500000,506688,512000,579093,636000,668365,676200,677048,691659,306000,310000,310000,310000,311518,312000,313000,315000,315000,315000,315000,320000,322000,325000,325500,326951,328370,330000,331200,334000,335000,346375,349000,350000,350000,350000,356200,360000,367463,375000,380000,380578,386222,395500,396000,397000,400000,413500,415000,425000,425000,433500,438000,441000,446000,450000,455000,460000,490000,493000,508000,511000,525000,533000,545000,560000,575000,575000,598695,600000,600000,610000,879000,884790],"type":"scatter3d","mode":"markers","marker":{"color":"red","size":2,"opacity":0.40000000000000002,"line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null},{"colorbar":{"title":"Price (USD)","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[129493.02032786896,143718.61088939622,157944.20145092349,172169.79201245078,186395.38257397801,200620.97313550525,214846.56369703254,229072.15425855978,243297.74482008701,257523.33538161431,271748.92594314157,285974.51650466881,300200.1070661961,314425.69762772333,328651.28818925057,342876.87875077786,357102.4693123051,371328.05987383239,385553.65043535962,399779.24099688692,414004.83155841421,428230.42211994139,442456.01268146868,456681.60324299597,470907.19380452321,485132.7843660505,499358.3749275778,513583.96548910497,527809.55605063227,542035.14661215956,556260.73717368674,570486.32773521403,584711.91829674132,598937.50885826861,613163.09941979591,627388.68998132308,641614.28054285038,655839.87110437767,670065.46166590496,684291.05222743214,698516.64278895943,712742.23335048673,726967.8239120139,741193.4144735412,755419.00503506849,769644.59559659567,783870.18615812296,798095.77671965014,812321.36728117755,826546.95784270472],[125258.11421362276,139483.70477515002,153709.29533667729,167934.88589820458,182160.47645973181,196386.06702125905,210611.65758278634,224837.24814431358,239062.83870584081,253288.4292673681,267514.0198288954,281739.61039042263,295965.20095194993,310190.79151347716,324416.3820750044,338641.97263653169,352867.56319805892,367093.15375958622,381318.74432111345,395544.33488264075,409769.92544416804,423995.51600569522,438221.10656722251,452446.6971287498,466672.28769027704,480897.87825180433,495123.46881333162,509349.0593748588,523574.64993638609,537800.24049791344,552025.83105944062,566251.42162096791,580477.01218249521,594702.6027440225,608928.19330554979,623153.78386707697,637379.37442860426,651604.96499013156,665830.55555165885,680056.14611318603,694281.73667471332,708507.32723624061,722732.91779776779,736958.50835929508,751184.09892082238,765409.68948234955,779635.28004387685,793860.87060540402,808086.46116693143,822312.05172845861],[121023.20809937657,135248.79866090382,149474.38922243111,163699.97978395841,177925.57034548564,192151.16090701288,206376.75146854017,220602.3420300674,234827.93259159464,249053.52315312193,263279.11371464923,277504.70427617646,291730.29483770375,305955.88539923099,320181.47596075822,334407.06652228552,348632.65708381275,362858.24764534004,377083.83820686728,391309.42876839457,405535.01932992187,419760.60989144904,433986.20045297634,448211.79101450363,462437.38157603086,476662.97213755816,490888.56269908545,505114.15326061263,519339.74382213992,533565.33438366721,547790.92494519439,562016.51550672168,576242.10606824898,590467.69662977627,604693.28719130356,618918.87775283074,633144.46831435803,647370.05887588533,661595.64943741262,675821.2399989398,690046.83056046709,704272.42112199438,718498.01168352156,732723.60224504885,746949.19280657615,761174.78336810332,775400.37392963062,789625.96449115779,803851.5550526852,818077.14561421238],[116788.30198513038,131013.89254665765,145239.48310818491,159465.0736697122,173690.66423123944,187916.25479276667,202141.84535429397,216367.4359158212,230593.02647734844,244818.61703887573,259044.20760040302,273269.79816193023,287495.38872345752,301720.97928498476,315946.56984651199,330172.16040803929,344397.75096956652,358623.34153109381,372848.93209262105,387074.52265414834,401300.11321567564,415525.70377720281,429751.29433873011,443976.8849002574,458202.47546178463,472428.06602331193,486653.65658483922,500879.2471463664,515104.83770789369,529330.42826942098,543556.01883094816,557781.60939247545,572007.19995400275,586232.79051553004,600458.38107705733,614683.97163858451,628909.5622001118,643135.1527616391,657360.74332316639,671586.33388469357,685811.92444622086,700037.51500774815,714263.10556927533,728488.69613080262,742714.28669232992,756939.87725385709,771165.46781538439,785391.05837691156,799616.64893843897,813842.23949996615],[112553.39587088418,126778.98643241145,141004.57699393871,155230.167555466,169455.75811699324,183681.34867852047,197906.93924004777,212132.529801575,226358.12036310224,240583.71092462953,254809.30148615682,269034.89204768406,283260.48260921135,297486.07317073859,311711.66373226582,325937.25429379311,340162.84485532035,354388.43541684764,368614.02597837488,382839.61653990217,397065.20710142946,411290.79766295664,425516.38822448393,439741.97878601123,453967.56934753846,468193.15990906575,482418.75047059305,496644.34103212022,510869.93159364752,525095.52215517475,539321.11271670205,553546.70327822934,567772.29383975663,581997.88440128393,596223.47496281122,610449.06552433828,624674.65608586557,638900.24664739287,653125.83720892016,667351.42777044745,681577.01833197474,695802.60889350204,710028.1994550291,724253.79001655639,738479.38057808368,752704.97113961098,766930.56170113827,781156.15226266533,795381.74282419286,809607.33338571992],[108318.48975663798,122544.08031816524,136769.67087969251,150995.2614412198,165220.85200274704,179446.44256427427,193672.03312580156,207897.6236873288,222123.21424885603,236348.80481038333,250574.39537191062,264799.98593343789,279025.57649496518,293251.16705649241,307476.75761801965,321702.34817954694,335927.93874107418,350153.52930260147,364379.1198641287,378604.710425656,392830.30098718329,407055.89154871047,421281.48211023776,435507.07267176505,449732.66323329229,463958.25379481958,478183.84435634688,492409.43491787405,506635.02547940135,520860.61604092864,535086.20660245582,549311.79716398311,563537.3877255104,577762.97828703769,591988.56884856499,606214.15941009216,620439.74997161946,634665.34053314675,648890.93109467404,663116.52165620122,677342.11221772851,691567.70277925581,705793.29334078298,720018.88390231028,734244.47446383757,748470.06502536475,762695.65558689204,776921.24614841922,791146.83670994663,805372.4272714738],[104083.58364239179,118309.17420391906,132534.76476544631,146760.3553269736,160985.94588850084,175211.53645002807,189437.12701155536,203662.7175730826,217888.30813460983,232113.89869613713,246339.48925766442,260565.07981919165,274790.67038071895,289016.26094224618,303241.85150377342,317467.44206530071,331693.03262682795,345918.62318835524,360144.21374988247,374369.80431140977,388595.39487293706,402820.98543446424,417046.57599599153,431272.16655751882,445497.75711904606,459723.34768057335,473948.93824210064,488174.52880362782,502400.11936515511,516625.70992668241,530851.30048820958,545076.89104973688,559302.48161126417,573528.07217279146,587753.66273431876,601979.25329584593,616204.84385737323,630430.43441890052,644656.02498042781,658881.61554195499,673107.20610348228,687332.79666500958,701558.38722653675,715783.97778806405,730009.56834959134,744235.15891111852,758460.74947264581,772686.34003417299,786911.9305957004,801137.52115722757],[99848.677528145607,114074.26808967287,128299.85865120013,142525.44921272743,156751.03977425466,170976.6303357819,185202.22089730919,199427.81145883643,213653.40202036366,227878.99258189095,242104.58314341825,256330.17370494548,270555.76426647278,284781.35482800001,299006.94538952725,313232.53595105454,327458.12651258177,341683.71707410907,355909.3076356363,370134.89819716359,384360.48875869089,398586.07932021806,412811.66988174536,427037.26044327265,441262.85100479989,455488.44156632718,469714.03212785447,483939.62268938165,498165.21325090894,512390.80381243624,526616.39437396335,540841.98493549065,555067.57549701794,569293.16605854523,583518.75662007253,597744.3471815997,611969.937743127,626195.52830465429,640421.11886618158,654646.70942770876,668872.29998923605,683097.89055076335,697323.48111229052,711549.07167381782,725774.66223534511,740000.25279687229,754225.84335839958,768451.43391992676,782677.02448145417,796902.61504298134],[95613.771413899405,109839.36197542667,124064.95253695393,138290.54309848123,152516.13366000846,166741.7242215357,180967.31478306299,195192.90534459022,209418.49590611746,223644.08646764475,237869.67702917205,252095.26759069928,266320.85815222654,280546.44871375384,294772.03927528101,308997.62983680831,323223.2203983356,337448.81095986289,351674.40152139007,365899.99208291736,380125.58264444466,394351.17320597183,408576.76376749913,422802.35432902642,437027.94489055371,451253.53545208101,465479.1260136083,479704.71657513548,493930.30713666277,508155.89769819006,522381.48825971724,536607.07882124453,550832.66938277183,565058.25994429912,579283.85050582641,593509.44106735359,607735.03162888088,621960.62219040818,636186.21275193547,650411.80331346265,664637.39387498994,678862.98443651723,693088.57499804441,707314.1655595717,721539.756121099,735765.34668262617,749990.93724415347,764216.52780568064,778442.11836720805,792667.70892873523],[91378.865299653218,105604.45586118048,119830.04642270775,134055.63698423503,148281.22754576226,162506.81810728949,176732.40866881679,190957.99923034402,205183.58979187126,219409.18035339855,233634.77091492584,247860.36147645308,262085.95203798037,276311.54259950761,290537.13316103484,304762.72372256214,318988.31428408937,333213.90484561666,347439.4954071439,361665.08596867119,375890.67653019849,390116.26709172566,404341.85765325296,418567.44821478025,432793.03877630748,447018.62933783478,461244.21989936207,475469.81046088925,489695.40102241654,503920.99158394383,518146.58214547101,532372.1727069983,546597.7632685256,560823.35383005289,575048.94439158018,589274.53495310736,603500.12551463465,617725.71607616195,631951.30663768924,646176.89719921642,660402.48776074371,674628.078322271,688853.66888379818,703079.25944532547,717304.85000685276,731530.44056837994,745756.03112990723,759981.62169143441,774207.21225296182,788432.802814489],[87143.959185407017,101369.54974693428,115595.14030846154,129820.73086998884,144046.32143151609,158271.91199304332,172497.50255457062,186723.09311609785,200948.68367762509,215174.27423915238,229399.86480067967,243625.45536220691,257851.0459237342,272076.63648526144,286302.22704678867,300527.81760831596,314753.4081698432,328978.99873137049,343204.58929289773,357430.17985442502,371655.77041595231,385881.36097747949,400106.95153900678,414332.54210053408,428558.13266206131,442783.7232235886,457009.3137851159,471234.90434664307,485460.49490817037,499686.08546969766,513911.67603122484,528137.26659275207,542362.85715427937,556588.44771580666,570814.03827733395,585039.62883886113,599265.21940038842,613490.80996191571,627716.40052344301,641941.99108497018,656167.58164649748,670393.17220802477,684618.76276955195,698844.35333107924,713069.94389260653,727295.53445413371,741521.125015661,755746.71557718818,769972.30613871559,784197.89670024277],[82909.05307116083,97134.643632688094,111360.23419421536,125585.82475574265,139811.41531726989,154037.00587879712,168262.59644032441,182488.18700185165,196713.77756337888,210939.36812490618,225164.95868643347,239390.54924796071,253616.139809488,267841.73037101526,282067.32093254244,296292.91149406973,310518.50205559703,324744.09261712432,338969.6831786515,353195.27374017879,367420.86430170608,381646.45486323326,395872.04542476055,410097.63598628785,424323.22654781514,438548.81710934243,452774.40767086972,466999.9982323969,481225.58879392419,495451.17935545149,509676.76991697866,523902.36047850596,538127.95104003325,552353.54160156054,566579.13216308784,580804.72272461501,595030.31328614231,609255.9038476696,623481.49440919689,637707.08497072407,651932.67553225136,666158.26609377866,680383.85665530583,694609.44721683313,708835.03777836042,723060.6283398876,737286.21890141489,751511.80946294207,765737.40002446948,779962.99058599665],[78674.146956914628,92899.737518441892,107125.32807996916,121350.91864149645,135576.50920302368,149802.09976455092,164027.69032607821,178253.28088760545,192478.87144913268,206704.46201065998,220930.05257218727,235155.6431337145,249381.2336952418,263606.82425676903,277832.41481829627,292058.00537982356,306283.5959413508,320509.18650287809,334734.77706440532,348960.36762593262,363185.95818745991,377411.54874898709,391637.13931051438,405862.72987204167,420088.32043356891,434313.9109950962,448539.50155662349,462765.09211815067,476990.68267967796,491216.27324120526,505441.86380273243,519667.45436425973,533893.04492578702,548118.63548731431,562344.22604884161,576569.81661036878,590795.40717189608,605020.99773342337,619246.58829495066,633472.17885647784,647697.76941800513,661923.35997953243,676148.9505410596,690374.5411025869,704600.13166411419,718825.72222564137,733051.31278716866,747276.90334869584,761502.49391022325,775728.08447175042],[74439.240842668441,88664.831404195706,102890.42196572297,117116.01252725026,131341.60308877751,145567.19365030475,159792.78421183204,174018.37477335928,188243.96533488651,202469.5558964138,216695.1464579411,230920.73701946833,245146.32758099562,259371.91814252286,273597.50870405009,287823.09926557739,302048.68982710462,316274.28038863192,330499.87095015915,344725.46151168644,358951.05207321374,373176.64263474091,387402.23319626821,401627.8237577955,415853.41431932274,430079.00488085003,444304.59544237732,458530.1860039045,472755.77656543179,486981.36712695908,501206.95768848626,515432.54825001355,529658.13881154079,543883.72937306808,558109.31993459538,572334.91049612255,586560.50105764985,600786.09161917714,615011.68218070443,629237.27274223161,643462.8633037589,657688.4538652862,671914.04442681337,686139.63498834067,700365.22554986796,714590.81611139514,728816.40667292243,743041.99723444961,757267.58779597702,771493.17835750419],[70204.33472842224,84429.925289949504,98655.515851476768,112881.10641300406,127106.6969745313,141332.28753605852,155557.87809758581,169783.46865911304,184009.05922064028,198234.64978216757,212460.24034369487,226685.8309052221,240911.42146674939,255137.01202827663,269362.60258980386,283588.19315133116,297813.78371285839,312039.37427438569,326264.96483591292,340490.55539744021,354716.14595896751,368941.73652049468,383167.32708202198,397392.91764354927,411618.5082050765,425844.0987666038,440069.68932813109,454295.27988965827,468520.87045118556,482746.46101271285,496972.05157424003,511197.64213576732,525423.23269729468,539648.82325882197,553874.41382034926,568100.00438187644,582325.59494340373,596551.18550493103,610776.77606645832,625002.3666279855,639227.95718951279,653453.54775104008,667679.13831256726,681904.72887409455,696130.31943562184,710355.90999714902,724581.50055867631,738807.09112020349,753032.6816817309,767258.27224325808],[65969.428614176053,80195.019175703317,94420.609737230581,108646.20029875787,122871.79086028511,137097.38142181234,151322.97198333964,165548.56254486687,179774.15310639411,193999.7436679214,208225.33422944869,222450.92479097593,236676.51535250322,250902.10591403046,265127.69647555769,279353.28703708499,293578.87759861222,307804.46816013951,322030.05872166675,336255.64928319404,350481.23984472133,364706.83040624851,378932.4209677758,393158.0115293031,407383.60209083033,421609.19265235763,435834.78321388492,450060.3737754121,464285.96433693939,478511.55489846668,492737.14545999386,506962.73602152115,521188.32658304845,535413.91714457574,549639.50770610303,563865.09826763021,578090.6888291575,592316.27939068479,606541.86995221209,620767.46051373926,634993.05107526656,649218.64163679385,663444.23219832103,677669.82275984832,691895.41332137561,706121.00388290279,720346.59444443008,734572.18500595726,748797.77556748467,763023.36612901185],[61734.522499929866,75960.11306145713,90185.703622984394,104411.29418451169,118636.88474603892,132862.47530756617,147088.06586909347,161313.6564306207,175539.24699214794,189764.83755367523,203990.42811520252,218216.01867672976,232441.60923825705,246667.19979978428,260892.79036131152,275118.38092283881,289343.97148436605,303569.56204589334,317795.15260742058,332020.74316894787,346246.33373047516,360471.92429200234,374697.51485352963,388923.10541505693,403148.69597658416,417374.28653811145,431599.87709963875,445825.46766116592,460051.05822269322,474276.64878422051,488502.23934574769,502727.82990727498,516953.42046880227,531179.01103032951,545404.6015918568,559630.19215338398,573855.78271491127,588081.37327643856,602306.96383796586,616532.55439949303,630758.14496102033,644983.73552254762,659209.3260840748,673434.91664560209,687660.50720712938,701886.09776865656,716111.68833018385,730337.27889171103,744562.86945323844,758788.46001476562],[57499.616385683665,71725.206947210929,85950.797508738193,100176.38807026549,114401.97863179272,128627.56919331996,142853.15975484723,157078.75031637447,171304.3408779017,185529.931439429,199755.52200095629,213981.11256248353,228206.70312401082,242432.29368553805,256657.88424706529,270883.47480859258,285109.06537011982,299334.65593164711,313560.24649317435,327785.83705470164,342011.42761622893,356237.01817775611,370462.6087392834,384688.19930081069,398913.78986233793,413139.38042386522,427364.97098539252,441590.56154691969,455816.15210844699,470041.74266997428,484267.33323150146,498492.92379302875,512718.51435455604,526944.10491608339,541169.69547761069,555395.28603913786,569620.87660066516,583846.46716219245,598072.05772371974,612297.64828524692,626523.23884677421,640748.82940830151,654974.41996982868,669200.01053135598,683425.60109288327,697651.19165441045,711876.78221593774,726102.37277746492,740327.96333899233,754553.5539005195],[53264.710271437478,67490.300832964742,81715.891394492006,95941.481956019299,110167.07251754653,124392.66307907377,138618.25364060106,152843.8442021283,167069.43476365553,181295.02532518283,195520.61588671012,209746.20644823735,223971.79700976465,238197.38757129188,252422.97813281912,266648.56869434641,280874.15925587364,295099.74981740094,309325.34037892817,323550.93094045547,337776.52150198276,352002.11206350994,366227.70262503723,380453.29318656452,394678.88374809176,408904.47430961905,423130.06487114634,437355.65543267352,451581.24599420081,465806.83655572811,480032.42711725528,494258.01767878258,508483.60824030987,522709.19880183716,536934.78936336446,551160.37992489163,565385.97048641893,579611.56104794622,593837.15160947351,608062.74217100069,622288.33273252798,636513.92329405528,650739.51385558245,664965.10441710975,679190.69497863704,693416.28554016422,707641.87610169151,721867.46666321869,736093.0572247461,750318.64778627327],[49029.804157191291,63255.394718718555,77480.985280245819,91706.575841773112,105932.16640330035,120157.75696482758,134383.34752635489,148608.93808788212,162834.52864940936,177060.11921093665,191285.70977246395,205511.30033399118,219736.89089551847,233962.48145704571,248188.07201857294,262413.66258010024,276639.25314162747,290864.84370315477,305090.434264682,319316.02482620929,333541.61538773659,347767.20594926376,361992.79651079106,376218.38707231835,390443.97763384558,404669.56819537288,418895.15875690017,433120.74931842735,447346.33987995464,461571.93044148193,475797.52100300911,490023.1115645364,504248.7021260637,518474.29268759099,532699.88324911823,546925.4738106454,561151.0643721727,575376.65493369999,589602.24549522728,603827.83605675446,618053.42661828175,632279.01717980905,646504.60774133622,660730.19830286351,674955.78886439081,689181.37942591798,703406.96998744528,717632.56054897245,731858.15111049986,746083.74167202704],[44794.898042945089,59020.488604472353,73246.079165999618,87471.669727526911,101697.26028905415,115922.85085058138,130148.44141210867,144374.03197363589,158599.62253516313,172825.21309669042,187050.80365821772,201276.39421974495,215501.98478127224,229727.57534279948,243953.16590432671,258178.75646585401,272404.34702738124,286629.93758890853,300855.52815043577,315081.11871196306,329306.70927349036,343532.29983501753,357757.89039654483,371983.48095807212,386209.07151959935,400434.66208112665,414660.25264265394,428885.84320418112,443111.43376570841,457337.0243272357,471562.61488876288,485788.20545029017,500013.79601181747,514239.38657334476,528464.97713487211,542690.56769639929,556916.15825792658,571141.74881945387,585367.33938098117,599592.92994250834,613818.52050403564,628044.11106556293,642269.70162709011,656495.2921886174,670720.88275014469,684946.47331167187,699172.06387319916,713397.65443472634,727623.24499625375,741848.83555778093],[40559.991928698888,54785.582490226152,69011.173051753416,83236.763613280709,97462.354174807944,111687.94473633518,125913.53529786247,140139.12585938972,154364.71642091696,168590.30698244425,182815.89754397154,197041.48810549878,211267.07866702607,225492.66922855331,239718.25979008054,253943.85035160783,268169.44091313507,282395.03147466236,296620.6220361896,310846.21259771689,325071.80315924418,339297.39372077136,353522.98428229865,367748.57484382595,381974.16540535318,396199.75596688048,410425.34652840777,424650.93708993495,438876.52765146224,453102.11821298953,467327.70877451671,481553.299336044,495778.88989757129,510004.48045909859,524230.07102062588,538455.66158215306,552681.25214368035,566906.84270520764,581132.43326673494,595358.02382826211,609583.61438978941,623809.2049513167,638034.79551284388,652260.38607437117,666485.97663589846,680711.56719742564,694937.15775895293,709162.74832048011,723388.33888200752,737613.9294435347],[36325.085814452716,50550.67637597998,64776.266937507244,79001.857499034537,93227.448060561772,107453.03862208901,121678.6291836163,135904.21974514355,150129.81030667078,164355.40086819808,178580.99142972537,192806.58199125261,207032.1725527799,221257.76311430713,235483.35367583437,249708.94423736166,263934.5347988889,278160.12536041619,292385.71592194343,306611.30648347072,320836.89704499801,335062.48760652519,349288.07816805248,363513.66872957977,377739.25929110701,391964.8498526343,406190.4404141616,420416.03097568877,434641.62153721607,448867.21209874336,463092.80266027054,477318.39322179783,491543.98378332512,505769.57434485242,519995.16490637971,534220.75546790683,548446.34602943412,562671.93659096141,576897.52715248871,591123.11771401588,605348.70827554318,619574.29883707047,633799.88939859765,648025.47996012494,662251.07052165223,676476.66108317941,690702.2516447067,704927.84220623388,719153.43276776129,733379.02332928847],[32090.1797002065,46315.770261733764,60541.360823261028,74766.951384788321,88992.541946315556,103218.13250784279,117443.72306937008,131669.31363089732,145894.90419242455,160120.49475395185,174346.08531547914,188571.67587700638,202797.26643853367,217022.8570000609,231248.44756158814,245474.03812311543,259699.62868464267,273925.21924616996,288150.80980769719,302376.40036922449,316601.99093075178,330827.58149227896,345053.17205380625,359278.76261533354,373504.35317686078,387729.94373838807,401955.53429991537,416181.12486144254,430406.71542296984,444632.30598449713,458857.89654602431,473083.4871075516,487309.07766907889,501534.66823060618,515760.25879213348,529985.8493536606,544211.43991518789,558437.03047671518,572662.62103824248,586888.21159976977,601113.80216129706,615339.39272282436,629564.98328435142,643790.57384587871,658016.164407406,672241.7549689333,686467.34553046059,700692.93609198765,714918.52665351517,729144.11721504224],[27855.273585960298,42080.864147487562,56306.454709014826,70532.045270542119,84757.635832069354,98983.226393596589,113208.81695512388,127434.40751665112,141659.99807817835,155885.58863970565,170111.17920123294,184336.76976276017,198562.36032428747,212787.9508858147,227013.54144734194,241239.13200886923,255464.72257039647,269690.31313192379,283915.90369345096,298141.49425497826,312367.08481650555,326592.67537803273,340818.26593956002,355043.85650108731,369269.44706261461,383495.0376241419,397720.62818566919,411946.21874719637,426171.80930872366,440397.39987025096,454622.99043177813,468848.58099330543,483074.17155483272,497299.76211636001,511525.35267788731,525750.94323941448,539976.53380094178,554202.12436246907,568427.71492399636,582653.30548552354,596878.89604705083,611104.48660857813,625330.0771701053,639555.66773163259,653781.25829315989,668006.84885468706,682232.43941621436,696458.02997774153,710683.62053926894,724909.21110079612],[23620.367471714126,37845.95803324139,52071.548594768654,66297.139156295947,80522.729717823182,94748.320279350417,108973.91084087771,123199.50140240495,137425.09196393218,151650.68252545947,165876.27308698677,180101.863648514,194327.45421004129,208553.04477156853,222778.63533309576,237004.22589462306,251229.81645615029,265455.40701767756,279680.99757920485,293906.58814073214,308132.17870225944,322357.76926378661,336583.35982531391,350808.9503868412,365034.54094836838,379260.13150989567,393485.72207142296,407711.31263295014,421936.90319447743,436162.49375600473,450388.0843175319,464613.6748790592,478839.26544058649,493064.85600211378,507290.44656364108,521516.03712516825,535741.62768669554,549967.21824822284,564192.80880975013,578418.39937127731,592643.9899328046,606869.58049433189,621095.17105585907,635320.76161738636,649546.35217891366,663771.94274044083,677997.53330196813,692223.1238634953,706448.71442502271,720674.30498654989],[19385.461357467953,33611.051918995217,47836.642480522481,62062.233042049775,76287.82360357701,90513.414165104245,104739.00472663154,118964.59528815877,133190.18584968601,147415.7764112133,161641.36697274059,175866.95753426783,190092.54809579512,204318.13865732236,218543.72921884959,232769.31978037689,246994.91034190412,261220.50090343141,275446.09146495862,289671.68202648591,303897.27258801321,318122.86314954038,332348.45371106768,346574.04427259497,360799.63483412226,375025.22539564956,389250.81595717685,403476.40651870403,417701.99708023132,431927.58764175861,446153.17820328579,460378.76876481308,474604.35932634037,488829.94988786767,503055.54044939496,517281.13101092214,531506.72157244943,545732.31213397672,559957.90269550402,574183.49325703119,588409.08381855849,602634.67438008578,616860.26494161296,631085.85550314025,645311.44606466754,659537.03662619472,673762.62718772201,687988.21774924919,702213.8083107766,716439.39887230378],[15150.555243221723,29376.145804748987,43601.736366276251,57827.326927803544,72052.917489330779,86278.508050858014,100504.09861238531,114729.68917391254,128955.27973543978,143180.87029696707,157406.46085849436,171632.0514200216,185857.64198154889,200083.23254307613,214308.82310460336,228534.41366613065,242760.00422765789,256985.59478918518,271211.18535071239,285436.77591223968,299662.36647376698,313887.95703529415,328113.54759682145,342339.13815834874,356564.72871987603,370790.31928140332,385015.90984293062,399241.50040445779,413467.09096598509,427692.68152751238,441918.27208903956,456143.86265056685,470369.45321209414,484595.04377362144,498820.63433514873,513046.22489667591,527271.8154582032,541497.40601973049,555722.99658125779,569948.58714278496,584174.17770431226,598399.76826583955,612625.35882736673,626850.94938889402,641076.53995042131,655302.13051194849,669527.72107347578,683753.31163500296,697978.90219653037,712204.49275805755],[10915.649128975521,25141.239690502785,39366.830252030049,53592.420813557343,67818.011375084578,82043.601936611813,96269.192498139106,110494.78305966634,124720.37362119358,138945.96418272087,153171.55474424816,167397.1453057754,181622.73586730269,195848.32642882993,210073.91699035716,224299.50755188445,238525.09811341169,252750.68867493898,266976.27923646622,281201.86979799351,295427.4603595208,309653.05092104798,323878.64148257527,338104.23204410257,352329.8226056298,366555.41316715709,380781.00372868439,395006.59429021156,409232.18485173886,423457.77541326615,437683.36597479333,451908.95653632062,466134.54709784791,480360.13765937521,494585.7282209025,508811.31878242968,523036.90934395697,537262.49990548426,551488.09046701156,565713.68102853873,579939.27159006603,594164.86215159332,608390.4527131205,622616.04327464779,636841.63383617508,651067.22439770226,665292.81495922955,679518.40552075673,693743.99608228414,707969.58664381132],[6680.7430147293489,20906.333576256613,35131.924137783877,49357.51469931117,63583.105260838405,77808.69582236564,92034.286383892933,106259.87694542017,120485.4675069474,134711.0580684747,148936.64863000199,163162.23919152922,177387.82975305652,191613.42031458375,205839.01087611099,220064.60143763828,234290.19199916552,248515.78256069281,262741.37312222004,276966.96368374734,291192.55424527463,305418.14480680181,319643.7353683291,333869.32592985639,348094.91649138363,362320.50705291092,376546.09761443821,390771.68817596539,404997.27873749268,419222.86929901998,433448.45986054715,447674.05042207445,461899.64098360174,476125.23154512903,490350.82210665633,504576.4126681835,518802.0032297108,533027.59379123803,547253.18435276533,561478.77491429262,575704.36547581991,589929.9560373472,604155.54659887427,618381.13716040156,632606.72772192885,646832.31828345614,661057.90884498344,675283.4994065105,689509.08996803802,703734.68052956508],[2445.8369004831475,16671.427462010412,30897.018023537676,45122.608585064969,59348.199146592204,73573.789708119439,87799.380269646732,102024.97083117397,116250.5613927012,130476.1519542285,144701.74251575579,158927.33307728302,173152.92363881032,187378.51420033755,201604.10476186479,215829.69532339208,230055.28588491931,244280.87644644661,258506.46700797384,272732.05756950111,286957.6481310284,301183.23869255558,315408.82925408287,329634.41981561016,343860.01037713746,358085.60093866475,372311.19150019204,386536.78206171922,400762.37262324651,414987.96318477381,429213.55374630098,443439.14430782828,457664.73486935557,471890.32543088286,486115.91599241016,500341.50655393733,514567.09711546462,528792.68767699192,543018.27823851921,557243.86880004639,571469.45936157368,585695.04992310097,599920.64048462815,614146.23104615544,628371.82160768274,642597.41216920991,656823.00273073721,671048.59329226438,685274.18385379179,699499.77441531897],[-1789.0692137630249,12436.521347764239,26662.111909291503,40887.702470818796,55113.293032346031,69338.883593873266,83564.47415540056,97790.064716927795,112015.65527845503,126241.24583998232,140466.83640150962,154692.42696303685,168918.01752456414,183143.60808609138,197369.19864761861,211594.78920914591,225820.37977067314,240045.97033220044,254271.56089372767,268497.15145525499,282722.74201678229,296948.33257830946,311173.92313983676,325399.51370136405,339625.10426289123,353850.69482441852,368076.28538594581,382301.87594747299,396527.46650900028,410753.05707052757,424978.64763205475,439204.23819358204,453429.82875510934,467655.41931663663,481881.00987816392,496106.6004396911,510332.19100121839,524557.78156274569,538783.37212427298,553008.96268580016,567234.55324732745,581460.14380885474,595685.73437038192,609911.32493190921,624136.91549343651,638362.50605496368,652588.09661649098,666813.68717801815,681039.27773954556,695264.86830107274],[-6023.9753280092264,8201.6152335180377,22427.205795045302,36652.796356572595,50878.38691809983,65103.977479627065,79329.568041154358,93555.158602681593,107780.74916420883,122006.33972573612,136231.93028726341,150457.52084879065,164683.11141031794,178908.70197184518,193134.29253337241,207359.88309489971,221585.47365642694,235811.06421795423,250036.65477948147,264262.24534100876,278487.83590253606,292713.42646406323,306939.01702559053,321164.60758711782,335390.19814864505,349615.78871017235,363841.37927169964,378066.96983322682,392292.56039475411,406518.1509562814,420743.74151780858,434969.33207933587,449194.92264086317,463420.51320239046,477646.10376391775,491871.69432544493,506097.28488697222,520322.87544849952,534548.46601002687,548774.05657155393,562999.64713308122,577225.23769460851,591450.82825613581,605676.4188176631,619902.00937919039,634127.59994071745,648353.19050224475,662578.78106377204,676804.37162529933,691029.96218682663],[-10258.881442255428,3966.7091192718362,18192.2996807991,32417.890242326393,46643.480803853628,60869.071365380863,75094.661926908157,89320.252488435392,103545.84304996263,117771.43361148992,131997.02417301721,146222.61473454445,160448.20529607174,174673.79585759898,188899.38641912621,203124.9769806535,217350.56754218074,231576.15810370803,245801.74866523527,260027.33922676256,274252.92978828982,288478.520349817,302704.11091134429,316929.70147287159,331155.29203439888,345380.88259592617,359606.47315745347,373832.06371898064,388057.65428050794,402283.24484203523,416508.83540356241,430734.4259650897,444960.01652661699,459185.60708814429,473411.19764967158,487636.78821119876,501862.37877272605,516087.96933425334,530313.55989578064,544539.15045730781,558764.74101883511,572990.3315803624,587215.92214188958,601441.51270341687,615667.10326494416,629892.69382647134,644118.28438799863,658343.87494952581,672569.46551105322,686795.0560725804],[-14493.787556501629,-268.19699497436523,13957.393566552899,28182.984128080192,42408.574689607427,56634.165251134662,70859.755812661955,85085.34637418919,99310.936935716425,113536.52749724372,127762.11805877101,141987.70862029825,156213.29918182554,170438.88974335277,184664.48030488001,198890.0708664073,213115.66142793454,227341.25198946183,241566.84255098907,255792.43311251636,270018.02367404365,284243.61423557083,298469.20479709812,312694.79535862542,326920.38592015265,341145.97648167994,355371.56704320724,369597.15760473441,383822.74816626171,398048.338727789,412273.92928931618,426499.51985084347,440725.11041237076,454950.70097389806,469176.29153542535,483401.88209695253,497627.47265847982,511853.06322000711,526078.65378153441,540304.24434306158,554529.83490458888,568755.42546611617,582981.01602764335,597206.60658917064,611432.19715069793,625657.78771222511,639883.3782737524,654108.96883527958,668334.55939680699,682560.14995833416],[-18728.693670747831,-4503.1031092205667,9722.4874523066974,23948.078013833991,38173.668575361226,52399.25913688846,66624.849698415754,80850.440259942989,95076.030821470224,109301.62138299752,123527.21194452481,137752.80250605204,151978.39306757934,166203.98362910657,180429.57419063381,194655.1647521611,208880.75531368834,223106.34587521563,237331.93643674286,251557.52699827016,265783.11755979748,280008.70812132466,294234.29868285195,308459.88924437924,322685.47980590642,336911.07036743371,351136.66092896101,365362.25149048818,379587.84205201548,393813.43261354277,408039.02317506995,422264.61373659724,436490.20429812453,450715.79485965183,464941.38542117912,479166.9759827063,493392.56654423359,507618.15710576088,521843.74766728817,536069.33822881535,550294.92879034264,564520.51935186994,578746.10991339711,592971.70047492441,607197.2910364517,621422.88159797888,635648.47215950617,649874.06272103335,664099.65328256076,678325.24384408793],[-22963.599784994003,-8738.0092234667391,5487.581338060525,19713.171899587818,33938.762461115053,48164.353022642288,62389.943584169581,76615.534145696816,90841.124707224051,105066.71526875134,119292.30583027864,133517.89639180587,147743.48695333317,161969.0775148604,176194.66807638764,190420.25863791493,204645.84919944216,218871.43976096946,233097.03032249669,247322.62088402399,261548.21144555128,275773.80200707843,289999.39256860572,304224.98313013301,318450.57369166031,332676.1642531876,346901.75481471489,361127.34537624207,375352.93593776936,389578.52649929665,403804.11706082383,418029.70762235112,432255.29818387842,446480.88874540571,460706.479306933,474932.06986846018,489157.66042998747,503383.25099151477,517608.84155304206,531834.43211456924,546060.02267609653,560285.61323762382,574511.203799151,588736.79436067829,602962.38492220559,617187.97548373276,631413.56604526006,645639.15660678723,659864.74716831464,674090.33772984182],[-27198.505899240205,-12972.915337712941,1252.6752238143235,15478.265785341617,29703.856346868852,43929.446908396087,58155.03746992338,72380.628031450615,86606.21859297785,100831.80915450514,115057.39971603244,129282.99027755967,143508.58083908696,157734.1714006142,171959.76196214143,186185.35252366873,200410.94308519596,214636.53364672326,228862.12420825049,243087.71476977778,257313.30533130508,271538.89589283225,285764.48645435955,299990.07701588684,314215.66757741407,328441.25813894137,342666.84870046866,356892.43926199584,371118.02982352313,385343.62038505042,399569.2109465776,413794.80150810489,428020.39206963219,442245.98263115948,456471.57319268677,470697.16375421395,484922.75431574124,499148.34487726854,513373.93543879583,527599.52600032301,541825.1165618503,556050.70712337759,570276.29768490477,584501.88824643206,598727.47880795936,612953.06936948653,627178.65993101383,641404.250492541,655629.84105406841,669855.43161559559],[-31433.412013486377,-17207.821451959113,-2982.2308904318488,11243.359671095444,25468.950232622679,39694.540794149914,53920.131355677207,68145.721917204442,82371.312478731677,96596.903040258971,110822.49360178626,125048.0841633135,139273.67472484079,153499.26528636803,167724.85584789526,181950.44640942256,196176.03697094979,210401.62753247708,224627.21809400432,238852.80865553161,253078.3992170589,267303.98977858608,281529.58034011337,295755.17090164067,309980.7614631679,324206.3520246952,338431.94258622249,352657.53314774967,366883.12370927696,381108.71427080425,395334.30483233143,409559.89539385872,423785.48595538602,438011.07651691331,452236.6670784406,466462.25763996778,480687.84820149507,494913.43876302236,509139.02932454966,523364.61988607683,537590.21044760407,551815.80100913136,566041.39157065866,580266.98213218595,594492.57269371324,608718.1632552403,622943.7538167676,637169.34437829489,651394.93493982218,665620.52550134948],[-35668.318127732578,-21442.727566205314,-7217.1370046780503,7008.4535568492429,21234.044118376478,35459.634679903713,49685.225241431006,63910.815802958241,78136.406364485476,92361.996926012769,106587.58748754006,120813.1780490673,135038.76861059459,149264.35917212183,163489.94973364906,177715.54029517635,191941.13085670359,206166.72141823088,220392.31197975812,234617.90254128541,248843.4931028127,263069.08366433985,277294.67422586714,291520.26478739444,305745.85534892173,319971.44591044902,334197.03647197632,348422.62703350349,362648.21759503079,376873.80815655808,391099.39871808526,405324.98927961255,419550.57984113984,433776.17040266714,448001.76096419443,462227.35152572161,476452.9420872489,490678.53264877619,504904.12321030349,519129.71377183066,533355.30433335796,547580.89489488525,561806.48545641243,576032.07601793972,590257.66657946701,604483.25714099419,618708.84770252148,632934.43826404866,647160.02882557607,661385.61938710324],[-39903.22424197878,-25677.633680451516,-11452.043118924252,2773.5474426030414,16999.138004130276,31224.728565657511,45450.319127184805,59675.909688712039,73901.500250239274,88127.090811766568,102352.68137329386,116578.2719348211,130803.86249634839,145029.45305787562,159255.04361940286,173480.63418093015,187706.22474245739,201931.81530398468,216157.40586551192,230382.99642703921,244608.5869885665,258834.17755009368,273059.76811162097,287285.35867314826,301510.9492346755,315736.53979620279,329962.13035773009,344187.72091925726,358413.31148078456,372638.90204231185,386864.49260383903,401090.08316536632,415315.67372689361,429541.26428842091,443766.8548499482,457992.44541147538,472218.03597300267,486443.62653452996,500669.21709605725,514894.80765758443,529120.39821911172,543345.98878063902,557571.57934216619,571797.16990369349,586022.76046522078,600248.35102674796,614473.94158827525,628699.53214980243,642925.12271132984,657150.71327285701],[-44138.130356224981,-29912.539794697717,-15686.949233170453,-1461.3586716431601,12764.231889884075,26989.82245141131,41215.413012938603,55441.003574465838,69666.594135993073,83892.184697520366,98117.775259047659,112343.36582057489,126568.95638210219,140794.54694362942,155020.13750515666,169245.72806668395,183471.31862821119,197696.90918973848,211922.49975126571,226148.09031279301,240373.6808743203,254599.27143584748,268824.8619973748,283050.45255890209,297276.04312042927,311501.63368195656,325727.22424348386,339952.81480501103,354178.40536653833,368403.99592806562,382629.5864895928,396855.17705112009,411080.76761264738,425306.35817417467,439531.94873570197,453757.53929722914,467983.12985875644,482208.72042028373,496434.31098181102,510659.9015433382,524885.49210486549,539111.08266639279,553336.67322791996,567562.26378944726,581787.85435097455,596013.44491250173,610239.03547402902,624464.6260355562,638690.21659708361,652915.80715861078],[-48373.036470471183,-34147.445908943919,-19921.855347416655,-5696.2647858893615,8529.3257756378734,22754.916337165108,36980.506898692402,51206.097460219637,65431.688021746872,79657.278583274165,93882.869144801458,108108.45970632869,122334.05026785599,136559.64082938322,150785.23139091046,165010.82195243775,179236.41251396498,193462.00307549228,207687.59363701951,221913.18419854681,236138.7747600741,250364.36532160128,264589.95588312857,278815.54644465586,293041.1370061831,307266.72756771039,321492.31812923768,335717.90869076486,349943.49925229215,364169.08981381945,378394.68037534662,392620.27093687392,406845.86149840121,421071.4520599285,435297.0426214558,449522.63318298297,463748.22374451027,477973.81430603756,492199.40486756485,506424.99542909203,520650.58599061932,534876.17655214667,549101.76711367373,563327.35767520103,577552.94823672832,591778.53879825561,606004.12935978291,620229.71992130997,634455.31048283749,648680.90104436455],[-52607.942584717355,-38382.352023190091,-24156.761461662827,-9931.1709001355339,4294.4196613917011,18520.010222918936,32745.600784446229,46971.191345973464,61196.781907500699,75422.372469027992,89647.963030555286,103873.55359208252,118099.14415360981,132324.73471513705,146550.32527666428,160775.91583819158,175001.50639971881,189227.0969612461,203452.68752277334,217678.27808430063,231903.86864582793,246129.4592073551,260355.0497688824,274580.64033040969,288806.23089193692,303031.82145346422,317257.41201499151,331483.00257651869,345708.59313804598,359934.18369957327,374159.77426110045,388385.36482262774,402610.95538415504,416836.54594568233,431062.13650720962,445287.7270687368,459513.31763026409,473738.90819179139,487964.49875331868,502190.08931484586,516415.67987637315,530641.27043790044,544866.86099942762,559092.45156095491,573318.04212248221,587543.63268400938,601769.22324553668,615994.81380706385,630220.40436859126,644445.99493011844],[-56842.848698963557,-42617.258137436293,-28391.667575909029,-14166.077014381735,59.513547145499615,14285.104108672735,28510.694670200028,42736.285231727263,56961.875793254498,71187.466354781791,85413.056916309084,99638.647477836319,113864.23803936361,128089.82860089085,142315.41916241808,156541.00972394538,170766.60028547261,184992.1908469999,199217.78140852714,213443.37197005443,227668.96253158172,241894.5530931089,256120.14365463619,270345.73421616352,284571.32477769069,298796.91533921799,313022.50590074528,327248.09646227246,341473.68702379975,355699.27758532704,369924.86814685422,384150.45870838151,398376.04926990881,412601.6398314361,426827.23039296339,441052.82095449057,455278.41151601786,469504.00207754516,483729.59263907245,497955.18320059963,512180.77376212692,526406.36432365421,540631.95488518139,554857.54544670868,569083.13600823598,583308.72656976315,597534.31713129045,611759.90769281762,625985.49825434503,640211.08881587221],[-61077.754813209729,-46852.164251682465,-32626.573690155201,-18400.983128627908,-4175.3925671006727,10050.197994426562,24275.788555953855,38501.37911748109,52726.969679008325,66952.560240535619,81178.150802062912,95403.741363590147,109629.33192511744,123854.92248664467,138080.51304817191,152306.1036096992,166531.69417122644,180757.28473275373,194982.87529428097,209208.46585580826,223434.05641733555,237659.64697886273,251885.23754039002,266110.82810191729,280336.41866344458,294562.00922497187,308787.59978649917,323013.19034802634,337238.78090955364,351464.37147108093,365689.96203260811,379915.5525941354,394141.14315566269,408366.73371718999,422592.32427871728,436817.91484024446,451043.50540177175,465269.09596329904,479494.68652482633,493720.27708635351,507945.8676478808,522171.4582094081,536397.04877093527,550622.63933246257,564848.22989398986,579073.82045551704,593299.41101704433,607525.00157857151,621750.59214009892,635976.18270162609],[-65312.66092745596,-51087.070365928696,-36861.479804401431,-22635.889242874138,-8410.2986813469033,5815.2918801803316,20040.882441707625,34266.47300323486,48492.063564762095,62717.654126289388,76943.244687816681,91168.835249343916,105394.42581087121,119620.01637239844,133845.60693392568,148071.19749545297,162296.78805698021,176522.3786185075,190747.96918003474,204973.55974156203,219199.15030308932,233424.7408646165,247650.33142614379,261875.92198767108,276101.51254919835,290327.10311072564,304552.69367225294,318778.28423378011,333003.87479530741,347229.4653568347,361455.05591836188,375680.64647988917,389906.23704141646,404131.82760294375,418357.41816447105,432583.00872599822,446808.59928752552,461034.18984905281,475259.7804105801,489485.37097210728,503710.96153363457,517936.55209516187,532162.14265668904,546387.73321821634,560613.32377974363,574838.91434127081,589064.5049027981,603290.09546432528,617515.68602585269,631741.27658737986],[-69547.567041702132,-55321.976480174868,-41096.385918647604,-26870.795357120311,-12645.204795593076,1580.3857659341593,15805.976327461452,30031.566888988687,44257.157450515922,58482.748012043216,72708.338573570509,86933.929135097744,101159.51969662504,115385.11025815227,129610.70081967951,143836.2913812068,158061.88194273403,172287.47250426133,186513.06306578856,200738.65362731586,214964.24418884315,229189.83475037033,243415.42531189762,257641.01587342491,271866.60643495212,286092.19699647941,300317.7875580067,314543.37811953388,328768.96868106117,342994.55924258847,357220.14980411564,371445.74036564294,385671.33092717023,399896.92148869752,414122.51205022482,428348.10261175199,442573.69317327929,456799.28373480658,471024.87429633387,485250.46485786105,499476.05541938834,513701.64598091564,527927.23654244281,542152.82710397011,556378.4176654974,570604.00822702458,584829.59878855187,599055.18935007905,613280.77991160646,627506.37047313363],[-73782.473155948333,-59556.882594421069,-45331.292032893805,-31105.701471366512,-16880.110909839277,-2654.5203483120422,11571.070213215251,25796.660774742486,40022.251336269721,54247.841897797014,68473.432459324307,82699.023020851542,96924.613582378835,111150.20414390607,125375.79470543331,139601.3852669606,153826.97582848783,168052.56639001513,182278.15695154236,196503.74751306965,210729.33807459695,224954.92863612412,239180.51919765142,253406.10975917871,267631.70032070595,281857.29088223324,296082.88144376053,310308.47200528771,324534.062566815,338759.6531283423,352985.24368986947,367210.83425139677,381436.42481292406,395662.01537445135,409887.60593597864,424113.19649750582,438338.78705903311,452564.37762056041,466789.9681820877,481015.55874361488,495241.14930514217,509466.73986666946,523692.33042819664,537917.92098972388,552143.51155125117,566369.10211277846,580594.69267430576,594820.28323583282,609045.87379736034,623271.4643588874],[-78017.379270194535,-63791.788708667271,-49566.198147140007,-35340.607585612714,-21115.017024085479,-6889.4264625582437,7336.1640989690495,21561.754660496284,35787.345222023519,50012.935783550813,64238.526345078106,78464.116906605341,92689.707468132634,106915.29802965987,121140.8885911871,135366.4791527144,149592.06971424163,163817.66027576893,178043.25083729616,192268.84139882345,206494.43196035075,220720.02252187792,234945.61308340522,249171.20364493251,263396.79420645977,277622.38476798707,291847.97532951436,306073.56589104154,320299.15645256883,334524.74701409612,348750.3375756233,362975.92813715059,377201.51869867789,391427.10926020518,405652.69982173247,419878.29038325965,434103.88094478694,448329.47150631424,462555.06206784153,476780.65262936871,491006.243190896,505231.83375242329,519457.42431395047,533683.01487547776,547908.60543700506,562134.19599853223,576359.78656005953,590585.3771215867,604810.96768311411,619036.55824464129]],"type":"surface","x":[539,627.55102040816325,716.10204081632651,804.65306122448987,893.20408163265301,981.75510204081638,1070.3061224489797,1158.8571428571429,1247.408163265306,1335.9591836734694,1424.5102040816328,1513.0612244897959,1601.6122448979593,1690.1632653061224,1778.7142857142858,1867.2653061224489,1955.8163265306123,2044.3673469387757,2132.9183673469388,2221.4693877551022,2310.0204081632655,2398.5714285714284,2487.1224489795918,2575.6734693877552,2664.2244897959185,2752.7755102040819,2841.3265306122448,2929.8775510204082,3018.4285714285716,3106.9795918367349,3195.5306122448978,3284.0816326530612,3372.6326530612246,3461.1836734693879,3549.7346938775513,3638.2857142857142,3726.8367346938776,3815.387755102041,3903.9387755102043,3992.4897959183672,4081.0408163265306,4169.591836734694,4258.1428571428569,4346.6938775510207,4435.2448979591836,4523.7959183673465,4612.3469387755104,4700.8979591836733,4789.4489795918371,4878],"y":[1,1.1428571428571428,1.2857142857142856,1.4285714285714286,1.5714285714285714,1.7142857142857142,1.8571428571428572,2,2.1428571428571428,2.2857142857142856,2.4285714285714284,2.5714285714285712,2.7142857142857144,2.8571428571428568,3,3.1428571428571428,3.2857142857142856,3.4285714285714284,3.5714285714285712,3.714285714285714,3.8571428571428568,4,4.1428571428571423,4.2857142857142856,4.4285714285714288,4.5714285714285712,4.7142857142857135,4.8571428571428568,5,5.1428571428571423,5.2857142857142856,5.4285714285714279,5.5714285714285712,5.7142857142857144,5.8571428571428568,6,6.1428571428571423,6.2857142857142856,6.4285714285714279,6.5714285714285712,6.7142857142857135,6.8571428571428568,7,7.1428571428571423,7.2857142857142856,7.4285714285714279,7.5714285714285712,7.7142857142857135,7.8571428571428568,8],"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 2.7: Linear regression plane of best fit overlaid on top of the data (using price, house size, and number of bedrooms as predictors). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the regression plane looks like for learning purposes.
+</p>
+</div>
+<p>We see that the predictions from linear regression with two predictors form a
+flat plane. This is the hallmark of linear regression, and differs from the
+wiggly, flexible surface we get from other methods such as K-NN regression.
+As discussed, this can be advantageous in one aspect, which is that for each
+predictor, we can get slopes/intercept from linear regression, and thus describe the
+plane mathematically. We can extract those slope values from our model object
+as shown below:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="regression2.html#cb39-1" tabindex="-1"></a>mcoeffs <span class="ot">&lt;-</span> mlm_fit <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="regression2.html#cb39-2" tabindex="-1"></a>             <span class="fu">extract_fit_parsnip</span>() <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="regression2.html#cb39-3" tabindex="-1"></a>             <span class="fu">tidy</span>()</span>
+<span id="cb39-4"><a href="regression2.html#cb39-4" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="regression2.html#cb39-5" tabindex="-1"></a>mcoeffs</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   72548.  11670.        6.22 8.76e- 10
+## 2 sqft            161.      5.93     27.1  8.34e-111
+## 3 beds         -29644.   4799.       -6.18 1.11e-  9</code></pre>
+<p>And then use those slopes to write a mathematical equation to describe the prediction plane: </p>
+<p><span class="math display">\[\text{house sale price} = \beta_0 + \beta_1\cdot(\text{house size}) + \beta_2\cdot(\text{number of bedrooms}),\]</span>
+where:</p>
+<ul>
+<li><span class="math inline">\(\beta_0\)</span> is the <em>vertical intercept</em> of the hyperplane (the price when both house size and number of bedrooms are 0)</li>
+<li><span class="math inline">\(\beta_1\)</span> is the <em>slope</em> for the first predictor (how quickly the price changes as you increase house size, holding number of bedrooms constant)</li>
+<li><span class="math inline">\(\beta_2\)</span> is the <em>slope</em> for the second predictor (how quickly the price changes as you increase the number of bedrooms, holding house size constant)</li>
+</ul>
+<p>Finally, we can fill in the values for <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> from the model output above
+to create the equation of the plane of best fit to the data:</p>
+<p><span class="math display">\[\text{house sale price} = 72548 + 161\cdot (\text{house size})  -29644 \cdot (\text{number of bedrooms})\]</span></p>
+<p>This model is more interpretable than the multivariable K-NN
+regression model; we can write a mathematical equation that explains how
+each predictor is affecting the predictions. But as always, we should
+question how well multivariable linear regression is doing compared to
+the other tools we have, such as simple linear regression
+and multivariable K-NN regression. If this comparison is part of
+the model tuning process—for example, if we are trying
+out many different sets of predictors for multivariable linear
+and K-NN regression—we must perform this comparison using
+cross-validation on only our training data. But if we have already
+decided on a small number (e.g., 2 or 3) of tuned candidate models and
+we want to make a final comparison, we can do so by comparing the prediction
+error of the methods on the test data.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="regression2.html#cb41-1" tabindex="-1"></a>lm_mult_test_results</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard   88739.   
+## 2 rsq     standard       0.603
+## 3 mae     standard   61732.</code></pre>
+<p>We obtain an RMSPE for the multivariable linear regression model
+of $88,739.45. This prediction error
+is less than the prediction error for the multivariable K-NN regression model,
+indicating that we should likely choose linear regression for predictions of
+house sale price on this data set. Revisiting the simple linear regression model
+with only a single predictor from earlier in this chapter, we see that the RMSPE for that model was
+$88,527.75,
+which is almost the same as that of our more complex model.
+As mentioned earlier, this is not always the case: often including more
+predictors will either positively or negatively impact the prediction performance on unseen
+test data.</p>
+</div>
+<div id="multicollinearity-and-outliers" class="section level2 hasAnchor" number="2.7">
+<h2><span class="header-section-number">2.7</span> Multicollinearity and outliers<a href="regression2.html#multicollinearity-and-outliers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>What can go wrong when performing (possibly multivariable) linear regression?
+This section will introduce two common issues—<em>outliers</em> and <em>collinear predictors</em>—and
+illustrate their impact on predictions.</p>
+<div id="outliers" class="section level3 hasAnchor" number="2.7.1">
+<h3><span class="header-section-number">2.7.1</span> Outliers<a href="regression2.html#outliers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Outliers are data points that do not follow the usual pattern of the rest of the data.
+In the setting of linear regression, these are points that
+have a vertical distance to the line of best fit that is either much higher or much lower
+than you might expect based on the rest of the data. The problem with outliers is that
+they can have <em>too much influence</em> on the line of best fit. In general, it is very difficult
+to judge accurately which data are outliers without advanced techniques that are beyond
+the scope of this book.</p>
+<p>But to illustrate what can happen when you have outliers, Figure <a href="regression2.html#fig:08-lm-outlier">2.8</a>
+shows a small subset of the Sacramento housing data again, except we have added a <em>single</em> data point (highlighted
+in red). This house is 5,000 square feet in size, and sold for only $50,000. Unbeknownst to the
+data analyst, this house was sold by a parent to their child for an absurdly low price. Of course,
+this is not representative of the real housing market values that the other data points follow;
+the data point is an <em>outlier</em>. In blue we plot the original line of best fit, and in red
+we plot the new line of best fit including the outlier. You can see how different the red line
+is from the blue line, which is entirely caused by that one extra outlier data point.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-lm-outlier"></span>
+<img src="_main_files/figure-html/08-lm-outlier-1.png" alt="Scatter plot of a subset of the data, with outlier highlighted in red." width="432" />
+<p class="caption">
+Figure 2.8: Scatter plot of a subset of the data, with outlier highlighted in red.
+</p>
+</div>
+<p>Fortunately, if you have enough data, the inclusion of one or two
+outliers—as long as their values are not <em>too</em> wild—will
+typically not have a large effect on the line of best fit. Figure
+<a href="regression2.html#fig:08-lm-outlier-2">2.9</a> shows how that same outlier data point from earlier
+influences the line of best fit when we are working with the entire original
+Sacramento training data. You can see that with this larger data set, the line
+changes much less when adding the outlier.
+Nevertheless, it is still important when working with linear regression to critically
+think about how much any individual data point is influencing the model.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-lm-outlier-2"></span>
+<img src="_main_files/figure-html/08-lm-outlier-2-1.png" alt="Scatter plot of the full data, with outlier highlighted in red." width="432" />
+<p class="caption">
+Figure 2.9: Scatter plot of the full data, with outlier highlighted in red.
+</p>
+</div>
+</div>
+<div id="multicollinearity" class="section level3 hasAnchor" number="2.7.2">
+<h3><span class="header-section-number">2.7.2</span> Multicollinearity<a href="regression2.html#multicollinearity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The second, and much more subtle, issue can occur when performing multivariable
+linear regression. In particular, if you include multiple predictors that are
+strongly linearly related to one another, the coefficients that describe the
+plane of best fit can be very unreliable—small changes to the data can
+result in large changes in the coefficients. Consider an extreme example using
+the Sacramento housing data where the house was measured twice by two people.
+Since the two people are each slightly inaccurate, the two measurements might
+not agree exactly, but they are very strongly linearly related to each other,
+as shown in Figure <a href="regression2.html#fig:08-lm-multicol">2.10</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-lm-multicol"></span>
+<img src="_main_files/figure-html/08-lm-multicol-1.png" alt="Scatter plot of house size (in square feet) measured by person 1 versus house size (in square feet) measured by person 2." width="432" />
+<p class="caption">
+Figure 2.10: Scatter plot of house size (in square feet) measured by person 1 versus house size (in square feet) measured by person 2.
+</p>
+</div>
+<p>If we again fit the multivariable linear regression model on this data, then the plane of best fit
+has regression coefficients that are very sensitive to the exact values in the data. For example,
+if we change the data ever so slightly—e.g., by running cross-validation, which splits
+up the data randomly into different chunks—the coefficients vary by large amounts:</p>
+<p>Best Fit 1: <span class="math inline">\(\text{house sale price} = 22535 + (220)\cdot (\text{house size 1 (ft$^2$)}) + (-86) \cdot (\text{house size 2 (ft$^2$)}).\)</span></p>
+<p>Best Fit 2: <span class="math inline">\(\text{house sale price} = 15966 + (86)\cdot (\text{house size 1 (ft$^2$)}) + (49) \cdot (\text{house size 2 (ft$^2$)}).\)</span></p>
+<p>Best Fit 3: <span class="math inline">\(\text{house sale price} = 17178 + (107)\cdot (\text{house size 1 (ft$^2$)}) + (27) \cdot (\text{house size 2 (ft$^2$)}).\)</span></p>
+<p>Therefore, when performing multivariable linear regression, it is important to avoid including very
+linearly related predictors. However, techniques for doing so are beyond the scope of this
+book; see the list of additional resources at the end of this chapter to find out where you can learn more.</p>
+</div>
+</div>
+<div id="designing-new-predictors" class="section level2 hasAnchor" number="2.8">
+<h2><span class="header-section-number">2.8</span> Designing new predictors<a href="regression2.html#designing-new-predictors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We were quite fortunate in our initial exploration to find a predictor variable (house size)
+that seems to have a meaningful and nearly linear relationship with our response variable (sale price).
+But what should we do if we cannot immediately find such a nice variable?
+Well, sometimes it is just a fact that the variables in the data do not have enough of
+a relationship with the response variable to provide useful predictions. For example,
+if the only available predictor was “the current house owner’s favorite ice cream flavor”,
+we likely would have little hope of using that variable to predict the house’s sale price
+(barring any future remarkable scientific discoveries about the relationship between
+the housing market and homeowner ice cream preferences). In cases like these,
+the only option is to obtain measurements of more useful variables.</p>
+<p>There are, however, a wide variety of cases where the predictor variables do have a
+meaningful relationship with the response variable, but that relationship does not fit
+the assumptions of the regression method you have chosen. For example, a data frame <code>df</code>
+with two variables—<code>x</code> and <code>y</code>—with a nonlinear relationship between the two variables
+will not be fully captured by simple linear regression, as shown in Figure <a href="regression2.html#fig:08-predictor-design">2.11</a>.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="regression2.html#cb43-1" tabindex="-1"></a>df</span></code></pre></div>
+<pre><code>## # A tibble: 100 × 2
+##        x      y
+##    &lt;dbl&gt;  &lt;dbl&gt;
+##  1 0.102 0.0720
+##  2 0.800 0.532 
+##  3 0.478 0.148 
+##  4 0.972 1.01  
+##  5 0.846 0.677 
+##  6 0.405 0.157 
+##  7 0.879 0.768 
+##  8 0.130 0.0402
+##  9 0.852 0.576 
+## 10 0.180 0.0847
+## # ℹ 90 more rows</code></pre>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-predictor-design"></span>
+<img src="_main_files/figure-html/08-predictor-design-1.png" alt="Example of a data set with a nonlinear relationship between the predictor and the response." width="432" />
+<p class="caption">
+Figure 2.11: Example of a data set with a nonlinear relationship between the predictor and the response.
+</p>
+</div>
+<p>Instead of trying to predict the response <code>y</code> using a linear regression on <code>x</code>,
+we might have some scientific background about our problem to suggest that <code>y</code>
+should be a cubic function of <code>x</code>. So before performing regression,
+we might <em>create a new predictor variable</em> <code>z</code> using the <code>mutate</code> function: </p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="regression2.html#cb45-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="regression2.html#cb45-2" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">z =</span> x<span class="sc">^</span><span class="dv">3</span>)</span></code></pre></div>
+<p>Then we can perform linear regression for <code>y</code> using the predictor variable <code>z</code>,
+as shown in Figure <a href="regression2.html#fig:08-predictor-design-2">2.12</a>.
+Here you can see that the transformed predictor <code>z</code> helps the
+linear regression model make more accurate predictions.
+Note that none of the <code>y</code> response values have changed between Figures <a href="regression2.html#fig:08-predictor-design">2.11</a>
+and <a href="regression2.html#fig:08-predictor-design-2">2.12</a>; the only change is that the <code>x</code> values
+have been replaced by <code>z</code> values.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:08-predictor-design-2"></span>
+<img src="_main_files/figure-html/08-predictor-design-2-1.png" alt="Relationship between the transformed predictor and the response." width="432" />
+<p class="caption">
+Figure 2.12: Relationship between the transformed predictor and the response.
+</p>
+</div>
+<p>The process of
+transforming predictors (and potentially combining multiple predictors in the process)
+is known as <em>feature engineering</em>. In real data analysis
+problems, you will need to rely on
+a deep understanding of the problem—as well as the wrangling tools
+from previous chapters—to engineer useful new features that improve
+predictive performance.</p>
+<blockquote>
+<p><strong>Note:</strong> Feature engineering
+is <em>part of tuning your model</em>, and as such you must not use your test data
+to evaluate the quality of the features you produce. You are free to use
+cross-validation, though!</p>
+</blockquote>
+</div>
+<div id="the-other-sides-of-regression" class="section level2 hasAnchor" number="2.9">
+<h2><span class="header-section-number">2.9</span> The other sides of regression<a href="regression2.html#the-other-sides-of-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far in this textbook we have used regression only in the context of
+prediction. However, regression can also be seen as a method to understand and
+quantify the effects of individual predictor variables on a response variable of interest.
+In the housing example from this chapter, beyond just using past data
+to predict future sale prices,
+we might also be interested in describing the
+individual relationships of house size and the number of bedrooms with house price,
+quantifying how strong each of these relationships are, and assessing how accurately we
+can estimate their magnitudes. And even beyond that, we may be interested in
+understanding whether the predictors <em>cause</em> changes in the price.
+These sides of regression are well beyond the scope of this book; but
+the material you have learned here should give you a foundation of knowledge
+that will serve you well when moving to more advanced books on the topic.</p>
+</div>
+<div id="exercises-1" class="section level2 hasAnchor" number="2.10">
+<h2><span class="header-section-number">2.10</span> Exercises<a href="regression2.html#exercises-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Practice exercises for the material covered in this chapter
+can be found in the accompanying
+<a href="https://worksheets.datasciencebook.ca">worksheets repository</a>
+in the “Regression II: linear regression” row.
+You can launch an interactive version of the worksheet in your browser by clicking the “launch binder” button.
+You can also preview a non-interactive version of the worksheet by clicking “view worksheet.”
+If you instead decide to download the worksheet and run it on your own machine,
+make sure to follow the instructions for computer setup
+found in Chapter <a href="#setup"><strong>??</strong></a>. This will ensure that the automated feedback
+and guidance that the worksheets provide will function as intended.</p>
+</div>
+<div id="additional-resources" class="section level2 hasAnchor" number="2.11">
+<h2><span class="header-section-number">2.11</span> Additional resources<a href="regression2.html#additional-resources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>The <a href="https://tidymodels.org/packages"><code>tidymodels</code> website</a> is an excellent
+reference for more details on, and advanced usage of, the functions and
+packages in the past two chapters. Aside from that, it also has a <a href="https://www.tidymodels.org/start/">nice
+beginner’s tutorial</a> and <a href="https://www.tidymodels.org/learn/">an extensive list
+of more advanced examples</a> that you can use
+to continue learning beyond the scope of this book.</li>
+<li><em>Modern Dive</em> <span class="citation">(Ismay and Kim 2020)</span> is another textbook that uses the
+<code>tidyverse</code> / <code>tidymodels</code> framework. Chapter 6 complements the material in
+the current chapter well; it covers some slightly more advanced concepts than
+we do without getting mathematical. Give this chapter a read before moving on
+to the next reference. It is also worth noting that this book takes a more
+“explanatory” / “inferential” approach to regression in general (in Chapters 5,
+6, and 10), which provides a nice complement to the predictive tack we take in
+the present book.</li>
+<li><em>An Introduction to Statistical Learning</em> <span class="citation">(James et al. 2013)</span> provides
+a great next stop in the process of
+learning about regression. Chapter 3 covers linear regression at a slightly
+more mathematical level than we do here, but it is not too large a leap and so
+should provide a good stepping stone. Chapter 6 discusses how to pick a subset
+of “informative” predictors when you have a data set with many predictors, and
+you expect only a few of them to be relevant. Chapter 7 covers regression
+models that are more flexible than linear regression models but still enjoy the
+computational efficiency of linear regression. In contrast, the K-NN methods we
+covered earlier are indeed more flexible but become very slow when given lots
+of data.</li>
+</ul>
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+Cover, Thomas, and Peter Hart. 1967. <span>“Nearest Neighbor Pattern Classification.”</span> <em>IEEE Transactions on Information Theory</em> 13 (1): 21–27.
+</div>
+<div class="csl-entry">
+Fix, Evelyn, and Joseph Hodges. 1951. <span>“Discriminatory Analysis. Nonparametric Discrimination: Consistency Properties.”</span> USAF School of Aviation Medicine, Randolph Field, Texas.
+</div>
+<div class="csl-entry">
+Ismay, Chester, and Albert Kim. 2020. <em>Statistical Inference via Data Science: A <span>M</span>odern<span>D</span>ive into <span>R</span> and the <span>T</span>idyverse</em>. Chapman; Hall/CRC Press. <a href="https://moderndive.com/">https://moderndive.com/</a>.
+</div>
+<div class="csl-entry">
+James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. 1st ed. Springer. <a href="https://www.statlearning.com/">https://www.statlearning.com/</a>.
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regression1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
