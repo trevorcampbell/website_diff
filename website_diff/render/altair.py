@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 
 
 def render(rootdir, relpath, soup, selector):
-    for root_elem in soup.select_all(selector):
-        for viz in root_elem.select_all('.vega-embed'):
+    for root_elem in soup.find_all(selector):
+        for viz in root_elem.find_all('.vega-embed'):
             figparent = viz.find_parent('figure')
             if figparent is None:
                 logger.warning(f"Found vega-embed but no figure parent. Skipping Element: {viz}")
