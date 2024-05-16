@@ -4,6 +4,7 @@ import os
 from urllib.parse import urlparse
 from loguru import logger
 import website_diff.htmldiff as hd
+import website_diff as wd
 
 # Helper function that extends the contents of previous sibling with contents of input element
 # if previous sibling has the same tag name as input element.
@@ -50,6 +51,17 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
         html_old = f.read()
     with open(filepath_new, 'r') as f:
         html_new = f.read()
+
+    soup_old = BeautifulSoup(html_old, 'html.parser')
+
+    # Pre-render plotly and altair viz elements before diff
+    wd.render.altair.render(filepath_old, 'prerendered_viz', soup_old, root_element)
+    html_old = str(soup_old)
+
+    soup_new = BeautifulSoup(html_new, 'html.parser')
+
+    wd.render.altair.render(filepath_new, 'prerendered_viz', soup_new, root_element)
+    html_new = str(soup_new)
 
     # TODO
     ## remove large data elements (plotly viz, altair viz) prior to diff
