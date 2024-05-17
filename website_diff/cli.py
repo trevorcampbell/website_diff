@@ -6,8 +6,6 @@ import shutil
 import website_diff as wd
 from loguru import logger
 
-import pdb
-
 @click.command()
 @click.option('-o', '--old', help='A directory containing the old version of the website (index.html should be in this directory).', required=True)
 @click.option('-n', '--new', help='A directory containing the new version of the website (index.html should be in this directory).', required=True)
@@ -36,12 +34,13 @@ def main(old, new, diff, selector, index):
 
     try:
         # TODO: Pre-render plotly and altair viz into images, create prerendered dir in diff dir
-        # wd.render.prerender.prerender(old,new,diff,selector,index)
+        logger.info(f"Pre-rendering viz elements")
+        wd.render.prerender.prerender(old,new,diff,selector,index)
 
         # crawl the old websites for pages and images
         logger.info(f"Crawling old website at {old}")
         old_images = set()
-        old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), old_images, selector)
+        old_pages = wd.crawler.crawl(os.path.join(old, index), old_images, selector)
         # make old_images, old_pages relative to old dir
         old_pages = set(os.path.relpath(path, old) for path in old_pages)
         old_images = set(os.path.relpath(path, old) for path in old_images)
@@ -49,7 +48,7 @@ def main(old, new, diff, selector, index):
         # crawl the new websites for pages and images
         logger.info(f"Crawling new website at {new}")
         new_images = set()
-        new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), new_images, selector)
+        new_pages = wd.crawler.crawl(os.path.join(new, index), new_images, selector)
         # make new_images, new_pages relative to new dir
         new_pages = set(os.path.relpath(path, new) for path in new_pages)
         new_images = set(os.path.relpath(path, new) for path in new_images)
@@ -104,11 +103,6 @@ def main(old, new, diff, selector, index):
         logger.info(f"Highlighting links to diff'd pages")
         for page in com_pages:
             wd.page.highlight_links(page, diff, add_pages, del_pages, diff_pages)
-
-        if os.path.isdir(os.path.join(old, 'prerendered')):
-            shutil.copytree(os.path.join(old, 'prerendered'), os.path.join(diff, 'prerendered'))
-        if os.path.isdir(os.path.join(new, 'prerendered')):
-            shutil.copytree(os.path.join(new, 'prerendered'), os.path.join(diff, 'prerendered'), dirs_exist_ok=True)
 
     except Exception:
         # print the exception
