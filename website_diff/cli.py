@@ -35,6 +35,9 @@ def main(old, new, diff, selector, index):
         shutil.copy2(diffcss_path, r)
 
     try:
+        # TODO: Pre-render plotly and altair viz into images, create prerendered dir in diff dir
+        # wd.render.prerender.prerender(old,new,diff,selector,index)
+
         # crawl the old websites for pages and images
         logger.info(f"Crawling old website at {old}")
         old_images = set()
@@ -101,6 +104,12 @@ def main(old, new, diff, selector, index):
         logger.info(f"Highlighting links to diff'd pages")
         for page in com_pages:
             wd.page.highlight_links(page, diff, add_pages, del_pages, diff_pages)
+
+        if os.path.isdir(os.path.join(old, 'prerendered')):
+            shutil.copytree(os.path.join(old, 'prerendered'), os.path.join(diff, 'prerendered'))
+        if os.path.isdir(os.path.join(new, 'prerendered')):
+            shutil.copytree(os.path.join(new, 'prerendered'), os.path.join(diff, 'prerendered'), dirs_exist_ok=True)
+
     except Exception:
         # print the exception
         print(traceback.format_exc())

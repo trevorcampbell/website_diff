@@ -5,6 +5,9 @@ from urllib.parse import urlparse
 from loguru import logger
 import website_diff.htmldiff as hd
 import website_diff as wd
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+import pdb
 
 # Helper function that extends the contents of previous sibling with contents of input element
 # if previous sibling has the same tag name as input element.
@@ -45,6 +48,19 @@ def _merge_diffs(elem, soup):
     else:
         _merge_previous(elem)  
 
+class Serv(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+       try:
+           #logger.info(f"HTTP server in dir {os.getcwd()}")
+           file_to_open = open(self.path[1:]).read()
+           self.send_response(200)
+       except:
+           file_to_open = "File not found"
+           self.send_response(404)
+       self.end_headers()
+       self.wfile.write(bytes(file_to_open, 'utf-8'))
+
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
     with open(filepath_old, 'r') as f:
@@ -52,15 +68,21 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
     with open(filepath_new, 'r') as f:
         html_new = f.read()
 
+    # server = Serv
+    # server.path = filepath_old
+    # logger.info(f"Serving {server.path}")
+    # httpd = HTTPServer(('localhost', 8084),server)
+    # httpd.serve_forever()
+
     soup_old = BeautifulSoup(html_old, 'html.parser')
 
     # Pre-render plotly and altair viz elements before diff
-    wd.render.altair.render(filepath_old, 'prerendered_viz', soup_old, root_element)
+    wd.render.altair.render(filepath_old, 'prerendered', soup_old, root_element)
     html_old = str(soup_old)
 
     soup_new = BeautifulSoup(html_new, 'html.parser')
 
-    wd.render.altair.render(filepath_new, 'prerendered_viz', soup_new, root_element)
+    wd.render.altair.render(filepath_new, 'prerendered', soup_new, root_element)
     html_new = str(soup_new)
 
     # TODO
