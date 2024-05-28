@@ -4,6 +4,8 @@
 The diff site has insertion/deletion highlighting, automatic scroll-to-next and scroll-to-previous key bindings,
 image diffing, and highlighting of links pointing to diffed pages.
 
+<img src="images/demo.gif" alt="website_diff demo" width="50%"/>
+
 ## Why would I use `website_diff`?
 This tool is primarily meant to help see/find differences in websites that are automatically generated from some source
 documents (e.g. documentation pages, Jupyterbooks, etc) that may not be obvious from source diffs produced by GitHub.
@@ -33,3 +35,19 @@ To access the command line interface help documentation, run
 ```
 website_diff --help
 ```
+
+## Navigation
+
+To view diffs, open `index.html` in the diff folder. 
+
+Text diffs are highlighted in green if text was inserted, red if text was deleted. Any links that point to a page containing diffs are highlighted in yellow.
+
+Any new image elements will have a green border and are highlighted in green, deleted image elements will have a red border and are highlighted in red.
+
+If an old image file was replaced with a new image file, the image on the diff'd page will be outlined in yellow and any differences in the image will be highlighted in red. 
+
+When first opening a page with diffs, the browser will scroll to the first diff on the page.
+
+To scroll to the next off-page diff, press the **n** key.
+
+To scroll to the previous off-page diff, press **Shift+n** or **N**. 
