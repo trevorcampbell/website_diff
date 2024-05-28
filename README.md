@@ -36,13 +36,15 @@ website_diff --help
 
 ## Navigation
 
-To view diffs, open `index.html` in the diff folder. 
+To view diffs, open `index.html` in the output folder (specified by the --diff option). 
 
-Text diffs are highlighted in green if text was inserted, red if text was deleted. Any links that point to a page containing diffs are highlighted in yellow.
+Text diffs are highlighted in green if text was inserted, red if text was deleted. Any links that point to a page containing diffs will have yellow text.
 
 Any new image elements will have a green border and are highlighted in green, deleted image elements will have a red border and are highlighted in red.
 
-If an old image file was replaced with a new image file, the image on the diff'd page will be outlined in yellow and any differences in the image will be highlighted in red. 
+If an old image source file was replaced with a new image file, the image on the diff'd page will be outlined in yellow and any differences in the image will be highlighted in red. 
+
+### Keyboard controls
 
 When first opening a page with diffs, the browser will scroll to the first diff on the page.
 
