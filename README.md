@@ -4,7 +4,7 @@
 The diff site has insertion/deletion highlighting, automatic scroll-to-next and scroll-to-previous key bindings,
 image diffing, and highlighting of links pointing to diffed pages.
 
-<img src="images/demo.gif" alt="website_diff demo" width="50%"/>
+<img src="images/demo.gif" alt="website_diff demo" width="75%"/>
 
 ## Why would I use `website_diff`?
 This tool is primarily meant to help see/find differences in websites that are automatically generated from some source
