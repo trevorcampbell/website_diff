@@ -44,7 +44,9 @@ Text diffs are highlighted in green if text was inserted, red if text was delete
 
 Any new image elements will have a green border and are highlighted in green, deleted image elements will have a red border and are highlighted in red.
 
-If an old image file was replaced with a new image file, the image on the diff'd page will be outlined in yellow and any differences in the image will be highlighted in red. 
+If an old image source file was replaced with a new image file, the image on the diff'd page will be outlined in yellow and any differences in the image will be highlighted in red. 
+
+### Keyboard controls
 
 When first opening a page with diffs, the browser will scroll to the first diff on the page.
 
