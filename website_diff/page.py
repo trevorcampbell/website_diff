@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 from loguru import logger
 import website_diff.htmldiff as hd
 import website_diff as wd
-from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # Helper function that extends the contents of previous sibling with contents of input element
 # if previous sibling has the same tag name as input element.
@@ -45,19 +44,6 @@ def _merge_diffs(elem, soup):
         elem.decompose()
     else:
         _merge_previous(elem)  
-
-class Serv(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-       try:
-           #logger.info(f"HTTP server in dir {os.getcwd()}")
-           file_to_open = open(self.path[1:]).read()
-           self.send_response(200)
-       except:
-           file_to_open = "File not found"
-           self.send_response(404)
-       self.end_headers()
-       self.wfile.write(bytes(file_to_open, 'utf-8'))
 
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
@@ -101,7 +87,6 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
 
     return is_diff
 
-# def highlight_links(filepath, root, add_pages, diff_pages, diff_images):
 def highlight_links(file, root, add_pages, del_pages, diff_pages):
     # load the html
     logger.debug(f"Opening html file at {os.path.join(root, file)}")
@@ -142,9 +127,6 @@ def highlight_links(file, root, add_pages, del_pages, diff_pages):
 
     with open(os.path.join(root, file), 'w') as f:
         f.write(str(soup))
-
-    # find all images
-    # TODO...
 
 
 
