@@ -4,6 +4,8 @@
 The diff site has insertion/deletion highlighting, automatic scroll-to-next and scroll-to-previous key bindings,
 image diffing, and highlighting of links pointing to diffed pages.
 
+![demo](https://github.com/trevorcampbell/website_diff/assets/59274601/369fd570-cb37-4910-8918-ad77bf0cb9ea)
+
 ## Why would I use `website_diff`?
 This tool is primarily meant to help see/find differences in websites that are automatically generated from some source
 documents (e.g. documentation pages, Jupyterbooks, etc) that may not be obvious from source diffs produced by GitHub.
