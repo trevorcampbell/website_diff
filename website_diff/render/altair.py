@@ -5,8 +5,6 @@ from bs4 import BeautifulSoup
 import os
 import shutil
 
-import pdb
-
 def extract_json_objects(text, decoder=JSONDecoder()):
     """Find JSON objects in text, and yield the decoded JSON data
 
@@ -87,7 +85,7 @@ def render(rootdir, relpath, soup, selector):
             # modify the soup to load the png
             script.decompose()
             new_img = soup.new_tag("img", src=f"{os.path.join(relpath,png_relpath)}")
-            viz.replace_with(new_img)
+            viz.insert_after(new_img)
 
             # done!
 

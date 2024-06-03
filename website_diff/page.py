@@ -7,8 +7,6 @@ import website_diff.htmldiff as hd
 import website_diff as wd
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-import pdb
-
 # Helper function that extends the contents of previous sibling with contents of input element
 # if previous sibling has the same tag name as input element.
 def _merge_previous(elem):
@@ -67,38 +65,6 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
         html_old = f.read()
     with open(filepath_new, 'r') as f:
         html_new = f.read()
-
-    # server = Serv
-    # server.path = filepath_old
-    # logger.info(f"Serving {server.path}")
-    # httpd = HTTPServer(('localhost', 8084),server)
-    # httpd.serve_forever()
-
-    soup_old = BeautifulSoup(html_old, 'html.parser')
-
-    # Pre-render plotly and altair viz elements before diff
-    wd.render.altair.render(filepath_old, 'prerendered', soup_old, root_element)
-    html_old = str(soup_old)
-
-    soup_new = BeautifulSoup(html_new, 'html.parser')
-
-    wd.render.altair.render(filepath_new, 'prerendered', soup_new, root_element)
-    html_new = str(soup_new)
-
-    # TODO
-    ## remove large data elements (plotly viz, altair viz) prior to diff
-    #soup_old = BeautifulSoup(html_old, 'html.parser')
-    #for elem in soup_old.select_one(root_element).find_all('script', {'type':'text/javascript'}):
-    #    elem.decompose()
-    #for elem in soup_old.select_one(root_element).find_all('div', {'class':'plotly'}):
-    #    elem.contentdecompose()
-    #html_old = str(soup_old)
-    #soup_new = BeautifulSoup(html_new, 'html.parser')
-    #for elem in soup_new.select_one(root_element).find_all('script', {'type':'text/javascript'}):
-    #    elem.decompose()
-    #for elem in soup_new.select_one(root_element).find_all('div', {'class':'plotly'}):
-    #    elem.decompose()
-    #html_new = str(soup_new)
 
     # generate the html diff
     diff = hd._htmldiff(html_old, html_new)
