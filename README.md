@@ -34,6 +34,10 @@ To access the command line interface help documentation, run
 website_diff --help
 ```
 
+There are several examples that can demonstrate the kinds of differences that website_diff will detect.
+
+To run website_diff on those examples, simply run the bash script `run_tests.sh` found within the website_diff repo.
+
 ## Navigation
 
 To view diffs, open `index.html` in the output folder (specified by the --diff option). 
