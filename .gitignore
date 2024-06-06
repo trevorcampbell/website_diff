@@ -72,3 +72,6 @@ docs/_build/
 
 # Pyenv
 .python-version
+
+# examples folder
+website_diff_examples
