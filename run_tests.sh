@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if ! [ -d "website_diff_examples" ]; then
-    git clone https://github.com/trevorcampbell/website_diff_examples.git
+    git clone git@github.com:trevorcampbell/website_diff_examples.git
 fi
 
 examples_dir="website_diff_examples/examples"
