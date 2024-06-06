@@ -33,7 +33,22 @@ def main(old, new, diff, selector, index):
         shutil.copy2(diffcss_path, r)
 
     try:
-        # TODO: Pre-render plotly and altair viz into images, create prerendered dir in diff dir
+        # Pre-render plotly and altair viz into images, create prerendered dir in diff dir
+        # Create copy of old and new dir to prerender and then diff
+        pre_old = os.path.join(os.path.dirname(os.path.normpath(old)),"prerendered_old")
+        if os.path.exists(pre_old):
+            shutil.rmtree(pre_old)
+
+        pre_new = os.path.join(os.path.dirname(os.path.normpath(new)),"prerendered_new")
+        if os.path.exists(pre_new):
+            shutil.rmtree(pre_new)
+
+        shutil.copytree(old, pre_old)
+        shutil.copytree(new, pre_new)
+
+        old = pre_old
+        new = pre_new
+
         logger.info(f"Pre-rendering viz elements")
         wd.render.prerender.prerender(old,new,diff,selector,index)
 
