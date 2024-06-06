@@ -40,6 +40,12 @@ There are several examples that can demonstrate the kinds of differences that we
 
 To run website_diff on those examples, simply run the bash script `run_tests.sh` found within the website_diff repo.
 
+`run_tests.sh` pulls the examples from a separate repo called `website_diff_examples`. 
+
+The folder `website_diff_examples/examples` contains several folders each representing a different example e.g. lines of text changed, image added, page added, etc. 
+
+In each of those folders, there will be an `old` and `prerendered_old` folder for the old website and old website with pre-rendered figures, `new` and `prerendered_new` for the new website and new website with pre-rendered figures, and lastly `diff` for the diffed version of the website with an `index.html` file that shows everything that has changed between the old and new versions of the website.
+
 ## Navigation
 
 To view diffs, open `index.html` in the output folder (specified by the --diff option). 
