@@ -33,46 +33,40 @@ def main(old, new, diff, selector, index):
         shutil.copy2(diffcss_path, r)
 
     try:
-        # crawl the old/new websites for pages
+        # Pre-render plotly and altair viz into images, create prerendered dir in diff dir
+        # Create copy of old and new dir to prerender and then diff
+        pre_old = os.path.join(os.path.dirname(os.path.normpath(old)),"prerendered_old")
+        if os.path.exists(pre_old):
+            shutil.rmtree(pre_old)
+
+        pre_new = os.path.join(os.path.dirname(os.path.normpath(new)),"prerendered_new")
+        if os.path.exists(pre_new):
+            shutil.rmtree(pre_new)
+
+        shutil.copytree(old, pre_old)
+        shutil.copytree(new, pre_new)
+
+        old = pre_old
+        new = pre_new
+
+        logger.info(f"Pre-rendering viz elements")
+        wd.render.prerender.prerender(old,new,diff,selector,index)
+
+        # crawl the old websites for pages and images
         logger.info(f"Crawling old website at {old}")
-        old_pages = wd.crawler.crawl(os.path.join(old, 'index.html'), selector)
+        old_images = set()
+        old_pages = wd.crawler.crawl(os.path.join(old, index), old_images, selector)
+        # make old_images, old_pages relative to old dir
+        old_pages = set(os.path.relpath(path, old) for path in old_pages)
+        old_images = set(os.path.relpath(path, old) for path in old_images)
+
+        # crawl the new websites for pages and images
         logger.info(f"Crawling new website at {new}")
-        new_pages = wd.crawler.crawl(os.path.join(new, 'index.html'), selector)
-
-        # convert paths to relative
-        old_pages = {os.path.relpath(path, old) : soup for (path, soup) in old_pages.items()}
-        new_pages = {os.path.relpath(path, new) : soup for (path, soup) in new_pages.items()}
-
-        # perform render tasks for old/new pages
-        # (render has to happen for old/new before item diffs, because some rendering might produce items)
-        for relpath in old_pages:
-            print(f"Rendering page {os.path.join(old, relpath)}")
-            for task in render.tasks:
-                print(f"Performing render task: {task}")
-                wd.render.tasks[task](old, relpath, old_pages[relpath], selector)
-        for relpath in new_pages:
-            print(f"Rendering page {os.path.join(new, relpath)}")
-            for task in render.tasks:
-                print(f"Render task: {task}")
-                wd.render.tasks[task](new, relpath, new_pages[relpath], selector)
-
-        old_targets = {}
-        for relpath in old_pages:
-            print(f"Gathering diff targets from page {os.path.join(old, relpath)}")
-            for item in target.items:
-                print(f"Gathering item: {item}")
-                old_targets[item] = wd.target.items[item].gather(old, relpath, old_pages[relpath], selector)
-                # TODO immediately diff it to avoid memory blowup
-                # TODO add "diff" tag to page above if a diff is found
-                # TODO render both new and old prior to doing item diffs
-
-        # perform render tasks, gather diff targets for new pages
-        new_targets = {}
-        
-            print(f"Gathering diff targets from page {os.path.join(new, relpath)}")
-            for item in target.items:
-                print(f"Gathering item: {item}")
-                new_targets[item] = wd.target.items[item].gather(new, relpath, new_pages[relpath], selector)
+        new_images = set()
+        new_pages = wd.crawler.crawl(os.path.join(new, index), new_images, selector)
+        # make new_images, new_pages relative to new dir
+        new_pages = set(os.path.relpath(path, new) for path in new_pages)
+        new_images = set(os.path.relpath(path, new) for path in new_images)
 
         # figure out which images are newly added, deleted, and common
         logger.info(f"Separating images into new, deleted, and common")
@@ -87,16 +81,16 @@ def main(old, new, diff, selector, index):
         logger.info(f"Highlighting new images")
         for img in add_images:
             logger.info(f"Highlighting new image {img}")
-            wd.image.highlight_add(os.path.join(new, img), os.path.join(diff, img))
+            wd.target.image.highlight_add(os.path.join(new, img), os.path.join(diff, img))
         logger.info(f"Highlighting deleted images")
         for img in del_images:
             logger.info(f"Highlighting deleted image {img}")
-            wd.image.highlight_del(os.path.join(old, img), os.path.join(diff, img))
+            wd.target.image.highlight_del(os.path.join(old, img), os.path.join(diff, img))
         logger.info(f"Diffing common images")
         diff_images = add_images.union(del_images)
         for img in com_images:
             logger.info(f"Diffing image {img}")
-            is_diff = wd.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
+            is_diff = wd.target.image.diff(os.path.join(old,img), os.path.join(new,img), os.path.join(diff,img))
             logger.info(f"Image diff {img}: {'difference!' if is_diff else 'same'}")
             if is_diff:
                 diff_images.add(img)
@@ -115,16 +109,16 @@ def main(old, new, diff, selector, index):
         diff_pages = set()
         for page in com_pages:
             logger.info(f"Diffing page {page}")
-            is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, root, diff, os.path.join(diff, page))
+            is_diff = wd.page.diff(os.path.join(old, page), os.path.join(new, page), diff_images, selector, diff, os.path.join(diff, page))
             logger.info(f"Page diff {page}: {'difference!' if is_diff else 'same'}")
             if is_diff:
                 diff_pages.add(page)
 
-        # TODO
         ## loop over all pages, modifying <a> tags that point to pages with diffs with highlights
-        #logger.info(f"Highlighting links to diff'd pages")
-        #for page in new_pages.union(old_pages):
-        #    wd.page.highlight_links(page, diff, add_pages, diff_pages)
+        logger.info(f"Highlighting links to diff'd pages")
+        for page in com_pages:
+            wd.page.highlight_links(page, diff, add_pages, del_pages, diff_pages)
+
     except Exception:
         # print the exception
         print(traceback.format_exc())

@@ -1,3 +1,7 @@
+[build-system]
+requires = ["maturin>=1.5,<2.0"]
+build-backend = "maturin"
+
 [project]
 name = "website_diff"
 version = "0.0.1"
@@ -12,10 +16,15 @@ dependencies = [
     "click",
     "loguru",
     "beautifulsoup4",
-    "html_diff",
     "Pillow",
     "numpy",
-    "vl-convert-python"
+    "vl-convert-python",
+    "maturin"
+]
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 [project.scripts]
@@ -24,8 +33,7 @@ website_diff = "website_diff.cli:main"
 [tool.setuptools]
 package-data = {"website_diff" = ["*.css", "*.js"]}
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "website_diff.htmldiff"
 

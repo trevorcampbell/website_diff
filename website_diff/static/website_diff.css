@@ -11,16 +11,40 @@ ins.diff-selected, ins.diff-selected * {
 	background-color: limegreen;
 }
 
-.link-to-diff {
-	color: darkgoldenrod;
+del.diff:has(img) {
+	background-color: transparent;
 }
 
-.link-to-new {
-	color: darkgreen;
+ins.diff:has(img) {
+	background-color: transparent;
+}
+
+del.diff > img {
+	border: 0.7rem solid lightcoral !important;
+}
+
+ins.diff > img {
+	border: 0.7rem solid lightgreen !important;
+}
+
+del.diff-selected > img {
+	border: 0.7rem solid firebrick !important;
+}
+
+ins.diff-selected > img {
+	border: 0.7rem solid limegreen !important;
+}
+
+.link-to-diff {
+	color: darkgoldenrod !important;
+}
+
+.link-to-add {
+	color: darkgreen !important;
 }
 
 .link-to-del {
-	color: darkred;
+	color: darkred !important;
 }
 
 
