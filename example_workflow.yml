@@ -1,0 +1,83 @@
+name: "Rebuild and deploy PR and diff versions of a website to gh-pages branch"
+
+# YOUR_FILES below should be replaced with a list of files that, when changed in a PR, will trigger the PR deploy preview
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'YOUR_FILES'
+    branches:
+      - 'main'
+
+jobs:
+  deploy-pr-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+
+    steps:
+
+      # Checkout a copy of the repository on the PR branch
+      - name: Checkout the PR version of the website repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+          ref: ${{ github.head_ref }}
+          
+      # Build the PR version of the website
+      # YOUR_BUILD_CODE below should be replaced with code that builds your website
+      - name: Build the PR version of the website
+        run: YOUR_BUILD_CODE
+
+      # Push the PR version of the website to the gh-pages branch
+      # the PR version will be stored in a folder named pull### (where ### is the PR number)
+      # WEBSITE_FOLDER below should be replaced with the folder in which the newly built website was stored
+      - name: Push the PR version of the website to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: WEBSITE_FOLDER
+          keep_files: true
+          destination_dir: pull${{ github.event.number }}
+
+      # Now that the website was built and pushed to gh-pages, checkout the gh-pages branch
+      - name: Checkout the gh-pages branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+          ref: 'gh-pages'
+
+      # Compute the diff of the new PR website (which is stored in the pull### folder)
+      # Store the diff version of the website in a folder named diff### (where ### is the PR number)
+      # OLD_SITE_FOLDER below should be replaced with the folder where the "base" version of the website is stored
+      - name: Run website diff to compare the old site to the PR version
+        run: |
+          rustup update
+          pip install --upgrade pip
+          pip install website_diff
+          website_diff --old OLD_SITE_FOLDER --new pull${{ github.event.number }} --diff diff${{ github.event.number }}
+
+      # Push the diff version of the website to the gh-pages branch
+      # the diff version will be stored in a folder named diff### (where ### is the PR number)
+      - name: Push the diff version of the website to the gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: diff${{ github.event.number }}
+          keep_files: true
+          destination_dir: diff${{ github.event.number }}
+
+      # Post a message on the PR thread with links to the PR preview, the diff, the base version, and the production version of the website
+      # YOUR_SITE below should be replaced with your website's URL
+      # OLD_SITE_FOLDER should be replaced with the folder where the "base" version of the website is stored
+      - name: Post PR preview, diff, current main, and production URLS to PR thread
+        uses: mshick/add-pr-comment@v2.8.1
+        with:
+          message: |
+              Hello! I've built a preview of your PR so that you can compare it to the current `main` branch.
+              * PR deploy preview available [here](https://YOUR_SITE.com/pull${{ github.event.number }}/index.html)
+              * PR diff with `main` available [here](https://YOUR_SITE.com/diff${{ github.event.number }}/index.html)
+              * Current `main` deploy preview available [here](https://YOUR_SITE.com/OLD_SITE_FOLDER/index.html)
+              * Public production build available [here](https://YOUR_SITE.com)
