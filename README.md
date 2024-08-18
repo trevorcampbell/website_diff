@@ -46,7 +46,7 @@ See the example workflow in `.github/workflow-templates/example_workflow.yml`. I
 - Commits the diff website to the `gh-pages` branch
 - Posts a message on the PR thread pointing users to each website
 
-This example template is based on a real usage of `website_diff` in the [Introduction to Data Science[(https://python.datasciencebook.ca) online textbook repository here: https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/.github/workflows/deploy_pr_preview.yml
+This example template is based on a real usage of `website_diff` in the [Introduction to Data Science](https://python.datasciencebook.ca) online textbook repository here: https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/.github/workflows/deploy_pr_preview.yml
 
 ## Visual Diff Style
 
