@@ -20,7 +20,7 @@ pip install --upgrade pip
 pip install website_diff
 ```
 
-## Usage
+## Command Line Usage
 `website_diff` takes as an input two folders each containing an `index.html` file, as well as the name of a third folder to be created
 that will contain the diffed website.
 ```
@@ -30,36 +30,34 @@ If `website_diff` runs successfully, the diff website will be available at
 ```
 path/where/diff/site/will/be/created/index.html
 ```
-
 To access the command line interface help documentation, run
 ```
 website_diff --help
 ```
 
-There are several examples that can demonstrate the kinds of differences that website_diff will detect.
+## GitHub Actions Usage
+`website_diff` can be used as part of a GitHub Actions workflow that runs when a website source code repository is updated.
+See the example workflow in `.github/workflow-templates/example_workflow.yml`. In this example, the workflow:
+- Checks out the website repository on the PR branch
+- Builds the PR website
+- Commits the PR website to the `gh-pages` branch
+- Checks out the `gh-pages` branch
+- Builds the diff website using `website_diff`
+- Commits the diff website to the `gh-pages` branch
+- Posts a message on the PR thread pointing users to each website
 
-To run website_diff on those examples, simply run the bash script `run_tests.sh` found within the website_diff repo.
+## Visual Diff Style
 
-`run_tests.sh` pulls the examples from a separate repo called `website_diff_examples`. 
+- **Text:** Diffs are highlighted in green if text was inserted, and red if text was deleted.
+- **Links to pages with diffs:** Any links that point to a page containing diffs are yellow.
+- **Images:** New images have a green border and are highlighted in green, deleted images have a red border and are highlighted in red, and changed images are outlined in yellow with differences highlighted in red. 
 
-The folder `website_diff_examples/examples` contains several folders each representing a different example e.g. lines of text changed, image added, page added, etc. 
+## Keyboard Controls
 
-In each of those folders, there will be an `old` and `prerendered_old` folder for the old website and old website with pre-rendered figures, `new` and `prerendered_new` for the new website and new website with pre-rendered figures, and lastly `diff` for the diffed version of the website with an `index.html` file that shows everything that has changed between the old and new versions of the website.
+- When first opening a page with diffs, the browser will scroll to the first diff on the page
+- To scroll to the next off-page diff, press the **n** key
+- To scroll to the previous off-page diff, press **Shift+n** or **N**
 
-## Navigation
+## Examples
 
-To view diffs, open `index.html` in the output folder (specified by the --diff option). 
-
-Text diffs are highlighted in green if text was inserted, red if text was deleted. Any links that point to a page containing diffs will have yellow text.
-
-Any new image elements will have a green border and are highlighted in green, deleted image elements will have a red border and are highlighted in red.
-
-If an old image source file was replaced with a new image file, the image on the diff'd page will be outlined in yellow and any differences in the image will be highlighted in red. 
-
-### Keyboard controls
-
-When first opening a page with diffs, the browser will scroll to the first diff on the page.
-
-To scroll to the next off-page diff, press the **n** key.
-
-To scroll to the previous off-page diff, press **Shift+n** or **N**. 
+There are several examples that can demonstrate the kinds of differences that website_diff will detect. To run website_diff on those examples, simply run the bash script `run_tests.sh` found within the website_diff repo. The `run_tests.sh` script pulls the examples from a separate repo called `website_diff_examples`.  The folder `website_diff_examples/examples` will then contain several folders each representing a different example e.g. lines of text changed, image added, page added, etc. In each of those folders, there will be an `old` and `prerendered_old` folder for the old website and old website with pre-rendered figures, `new` and `prerendered_new` for the new website and new website with pre-rendered figures, and lastly `diff` for the diffed version of the website with an `index.html` file that shows everything that has changed between the old and new versions of the website.
