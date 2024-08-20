@@ -4,12 +4,12 @@ del.diff, del.diff * {
 ins.diff, ins.diff * {
 	background-color: lightgreen;
 }
-del.diff-selected, del.diff-selected * {
+/*del.diff-selected, del.diff-selected * {
 	background-color: firebrick;
 }
 ins.diff-selected, ins.diff-selected * {
 	background-color: limegreen;
-}
+}*/
 
 del.diff:has(img) {
 	background-color: transparent;
@@ -27,13 +27,14 @@ ins.diff > img {
 	border: 0.7rem solid lightgreen !important;
 }
 
+/*
 del.diff-selected > img {
 	border: 0.7rem solid firebrick !important;
 }
 
 ins.diff-selected > img {
 	border: 0.7rem solid limegreen !important;
-}
+}*/
 
 .link-to-diff {
 	color: darkgoldenrod !important;
