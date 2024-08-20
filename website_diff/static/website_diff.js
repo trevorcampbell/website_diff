@@ -1,6 +1,6 @@
 var diffidx = 0;
 
-$(document).ready(function() {
+$(window).on("load", function() {
    // highlight and scroll to the first diff element
    var cur;
    cur = $(".diff:visible").eq(diffidx)
