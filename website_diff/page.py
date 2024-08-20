@@ -20,7 +20,7 @@ def _merge_diffs(elem, soup):
 
     if elem.contents:
         next_child = elem.contents[0]
-    else: 
+    else:
         return
 
     while next_child is not None:
@@ -43,7 +43,7 @@ def _merge_diffs(elem, soup):
     if len(elem.contents) == 1 and elem.name in ['ins', 'del'] and child == '\n':
         elem.decompose()
     else:
-        _merge_previous(elem)  
+        _merge_previous(elem)
 
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
     # load the html files
@@ -77,7 +77,9 @@ def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepa
 
     # append the js/css files
     js_soup = BeautifulSoup('<script src="website_diff.js"></script>', 'html.parser')
+    jq_soup = BeautifulSoup('<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>', 'html.parser')
     css_soup = BeautifulSoup('<link rel="stylesheet" href="website_diff.css" type="text/css"/>', 'html.parser')
+    soup.select_one("head").append(jq_soup)
     soup.select_one("head").append(js_soup)
     soup.select_one("head").append(css_soup)
 
