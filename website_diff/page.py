@@ -104,6 +104,9 @@ def highlight_links(file, root, add_pages, del_pages, diff_pages):
     for link in soup.select('a'):
         # extract the url
         ref = link.get('href')
+        # skip <a> tags without href properties
+        if ref is None:
+            continue
         # remove anchors
         ref = ref.split('#')[0]
         # parse the url
