@@ -57,6 +57,7 @@ jobs:
           rustup update
           pip install --upgrade pip
           pip install website_diff
+          rm -rf diff${{ github.event.number }}
           website_diff --old OLD_SITE_FOLDER --new pull${{ github.event.number }} --diff diff${{ github.event.number }}
 
       # Push the diff version of the website to the gh-pages branch
