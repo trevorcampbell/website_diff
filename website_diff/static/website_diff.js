@@ -35,8 +35,10 @@ function isElementVisible(el) {
 function scrollToFirstDiff(diffidx) {
   var cur;
   cur = $(".diff:visible").eq(diffidx)
-  cur.addClass("diff-selected");
-  $(cur)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
+  if (typeof cur[0] != "undefined") {
+    cur.addClass("diff-selected");
+    $(cur)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
+  }
 }
 
 // Scroll to the next diff element on pressing n, previous on pressing Shift + n
@@ -45,6 +47,9 @@ function scrollToNextDiff(diffidx) {
     var cur;	
     var next;
     cur = $(".diff:visible").eq(diffidx)
+    if (typeof cur[0] == "undefined") {
+      return;
+    }
     cur.removeClass("diff-selected");
     if (e.which == 110){
      
