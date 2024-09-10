@@ -43,7 +43,7 @@ def highlight_del(filepath, filepath_out):
 
 def _highlight_image(filepath, filepath_out, color, alpha):
     img = Image.open(filepath)
-    bw = ImageEnhance.Color(img).enhance(0.0).convert("RGBA")
+    bw = img.convert("LA").convert("RGBA")
     overlay = Image.new("RGBA", img.size, color = color)
     blended = Image.blend(bw, overlay, alpha)
     blended.convert("RGB").save(filepath_out)
