@@ -42,6 +42,9 @@ def crawl(filepath, gathered, content_selector = 'html', crawled = None):
     	for link in elem.find_all('a'):
             # extract the url
             ref = link.get('href')
+            # skip <a> tags without href properties
+            if ref is None:
+                continue
             # remove anchors
             ref = ref.split('#')[0]
             # parse the url

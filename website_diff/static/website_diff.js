@@ -1,11 +1,13 @@
+// dynamically load jQuery if not already present on the website
+if (typeof jQuery == 'undefined') {
+  document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>');
+}
+
 var diffidx = 0;
 
-$(document).ready(function() {
-   // highlight and scroll to the first diff element
-   var cur;
-   cur = $(".diff:visible").eq(diffidx)
-   cur.addClass("diff-selected");
-   $(cur)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
+window.addEventListener('load', () => {
+  scrollToFirstDiff(diffidx);
+  scrollToNextDiff(diffidx);
 });
 
 // Borrowed from https://stackoverflow.com/a/15203639
@@ -29,51 +31,66 @@ function isElementVisible(el) {
   );
 }
 
-$(document).on("keypress", function(e) {
-   var cur;	
-   var next;
-   cur = $(".diff:visible").eq(diffidx)
-   cur.removeClass("diff-selected");
-   if (e.which == 110){
-    
-    var diffidx_tmp = diffidx + 1;
-    if (diffidx_tmp > $(".diff:visible").length-1){
-      diffidx_tmp = $(".diff:visible").length-1;
-    }
-    var cur_tmp = $(".diff:visible").eq(diffidx_tmp);
+// Scroll to the center of first diff element on page
+function scrollToFirstDiff(diffidx) {
+  var cur;
+  cur = $(".diff:visible").eq(diffidx)
+  if (typeof cur[0] != "undefined") {
+    cur.addClass("diff-selected");
+    $(cur)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
+  }
+}
 
-    while (isElementVisible(cur_tmp[0])) {
-      diffidx_tmp += 1;
-      if (diffidx_tmp > $(".diff:visible").length-1){
-          diffidx_tmp = $(".diff:visible").length-1;
-          break
-      }
-      cur_tmp = $(".diff:visible").eq(diffidx_tmp)
+// Scroll to the next diff element on pressing n, previous on pressing Shift + n
+function scrollToNextDiff(diffidx) {
+  $(document).on("keypress", function(e) {
+    var cur;	
+    var next;
+    cur = $(".diff:visible").eq(diffidx)
+    if (typeof cur[0] == "undefined") {
+      return;
     }
-    cur = cur_tmp
-    diffidx = diffidx_tmp
-   } 
-   if (e.which == 78) {
+    cur.removeClass("diff-selected");
+    if (e.which == 110){
      
-     var diffidx_tmp = diffidx - 1;
-     if (diffidx_tmp < 0){
-      diffidx_tmp = 0;
+     var diffidx_tmp = diffidx + 1;
+     if (diffidx_tmp > $(".diff:visible").length-1){
+       diffidx_tmp = $(".diff:visible").length-1;
      }
      var cur_tmp = $(".diff:visible").eq(diffidx_tmp);
-
+ 
      while (isElementVisible(cur_tmp[0])) {
-      diffidx_tmp -= 1;
-      if (diffidx_tmp < 0){
-        diffidx_tmp = 0;
-        break
-      }
-      cur_tmp = $(".diff:visible").eq(diffidx_tmp)
+       diffidx_tmp += 1;
+       if (diffidx_tmp > $(".diff:visible").length-1){
+           diffidx_tmp = $(".diff:visible").length-1;
+           break
+       }
+       cur_tmp = $(".diff:visible").eq(diffidx_tmp)
      }
      cur = cur_tmp
      diffidx = diffidx_tmp
-   }
-   next = $(".diff:visible").eq(diffidx)
-   next.addClass("diff-selected")
-   $(next)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
-});
-
+    } 
+    if (e.which == 78) {
+      
+      var diffidx_tmp = diffidx - 1;
+      if (diffidx_tmp < 0){
+       diffidx_tmp = 0;
+      }
+      var cur_tmp = $(".diff:visible").eq(diffidx_tmp);
+ 
+      while (isElementVisible(cur_tmp[0])) {
+       diffidx_tmp -= 1;
+       if (diffidx_tmp < 0){
+         diffidx_tmp = 0;
+         break
+       }
+       cur_tmp = $(".diff:visible").eq(diffidx_tmp)
+      }
+      cur = cur_tmp
+      diffidx = diffidx_tmp
+    }
+    next = $(".diff:visible").eq(diffidx)
+    next.addClass("diff-selected")
+    $(next)[0].scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest"});
+ });
+}
