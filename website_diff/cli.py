@@ -22,6 +22,10 @@ def main(old, new, diff, selector, index):
     logger.remove()
     logger.add(sys.stderr, level="INFO")
 
+    # Throw error if diff folder already exists
+    if os.path.exists(diff):
+        sys.exit(f"ERROR: Diff folder {diff} already exists.")
+
     # copy over the new directory to the diff directory
     # also ensure directory doesn't exist before this code runs
     # copy the js/css to all subdirs (just brute forcing this for now...)

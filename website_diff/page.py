@@ -112,15 +112,14 @@ def highlight_links(file, root, add_pages, del_pages, diff_pages):
         logger.debug(f"Found link in {file}: {ref}")
         logger.debug(f"Parsed link: {url}")
         if not bool(url.netloc) and ref[-5:] == '.html':
-            # this is a relative path to an html file. Find path relative to root
-            #relative_link_path = os.path.relpath(os.path.normpath(os.path.join(curdir, ref)), diff)
-            if url.path in diff_pages:
+            path = os.path.normpath(url.path)
+            if path in diff_pages:
                 logger.debug(f"This is a relative path to a diff'd page. Highlighting")
                 link['class'] = link.get('class', []) + ["link-to-diff"]
-            elif url.path in add_pages:
+            elif path in add_pages:
                 logger.debug(f"This is a relative path to an added page. Highlighting")
                 link['class'] = link.get('class', []) + ["link-to-add"]
-            elif url.path in del_pages:
+            elif path in del_pages:
                 logger.debug(f"This is a relative path to a deleted page. Highlighting")
                 link['class'] = link.get('class', []) + ["link-to-del"]
             else:
