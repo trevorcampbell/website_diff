@@ -130,5 +130,28 @@ def highlight_links(file, root, add_pages, del_pages, diff_pages):
     with open(os.path.join(root, file), 'w') as f:
         f.write(str(soup))
 
-
+# Add banner to pages that were added or deleted
+# TAKES: 
+# diff_path - Path to diff folder
+# add_pages - Set of added pages
+# del_pages - Set of deleted pages
+# RETURNS: nothing
+def put_banner(diff_path, add_pages, del_pages):
+    for page in add_pages.union(del_pages):
+        with open(os.path.join(diff_path, page), 'r') as f:
+            html_add = f.read()
+        soup = BeautifulSoup(html_add, "html.parser")
+        if page in add_pages:
+            markup = """<div class='alert add-banner'><span class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>This is an added page.</div>"""
+        else:
+            markup = """<div class='alert del-banner'><span class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>This is a deleted page.</div>"""
+        markup_soup = BeautifulSoup(markup, 'html.parser')
+        soup.body.insert(1, markup_soup.div)
+        # add css
+        css_soup = BeautifulSoup('<link rel="stylesheet" href="website_diff.css" type="text/css"/>', 'html.parser')
+        soup.select_one("head").append(css_soup)
+        # write the page w/ banner
+        with open(os.path.join(diff_path, page), 'w') as f:
+            f.write(str(soup))
+        
 

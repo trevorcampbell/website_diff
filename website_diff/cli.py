@@ -118,6 +118,9 @@ def main(old, new, diff, selector, index):
             if is_diff:
                 diff_pages.add(page)
 
+        # Add banners to new and deleted pages
+        wd.page.put_banner(diff, add_pages, del_pages)
+            
         ## loop over all pages, modifying <a> tags that point to pages with diffs with highlights
         logger.info(f"Highlighting links to diff'd pages")
         for page in com_pages:
