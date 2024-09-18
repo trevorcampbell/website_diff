@@ -63,7 +63,7 @@ jobs:
       # Push the diff version of the website to the gh-pages branch
       # the diff version will be stored in a folder named diff### (where ### is the PR number)
       - name: Push the diff version of the website to the gh-pages branch
-        uses: peaceiris/actions-gh-pages@v3.8.0
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: diff${{ github.event.number }}
