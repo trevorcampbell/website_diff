@@ -32,7 +32,11 @@ def _prerender_pages(dir, pages, selector):
 
         soup = BeautifulSoup(html, 'html.parser')
 
+        # Render altair visualizations
         wd.render.altair.render(filepath, 'prerendered', soup, selector)
+
+        # Render plotly visualizations
+        wd.render.plotly.render(filepath, 'prerendered', soup, selector)
 
         with open(filepath, 'w') as f:
             f.write(str(soup))
