@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "website_diff"
-version = "0.0.1"
+version = "0.1.0"
 description = "A simple tool for producing navigable, highlighted diffs of rendered HTML websites"
 requires-python = ">=3.9"
 readme = "README.md"
