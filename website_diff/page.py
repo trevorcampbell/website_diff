@@ -142,9 +142,9 @@ def put_banner(diff_path, add_pages, del_pages):
             html_add = f.read()
         soup = BeautifulSoup(html_add, "html.parser")
         if page in add_pages:
-            markup = """<div class='alert add-banner'><span class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>This is an added page.</div>"""
+            markup = """<div class='alert add-banner'><span class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>This is a newly added page.</div>"""
         else:
-            markup = """<div class='alert del-banner'><span class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>This is a deleted page.</div>"""
+            markup = """<div class='alert del-banner'><span class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>This page was deleted from the website.</div>"""
         markup_soup = BeautifulSoup(markup, 'html.parser')
         soup.body.insert(1, markup_soup.div)
         # add css
