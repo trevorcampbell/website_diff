@@ -1,5 +1,6 @@
 import sys
 import os
+import website_diff as wd
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from loguru import logger
@@ -77,6 +78,22 @@ def gather_local_images(filepath, soup, root_element, gathered):
         if not bool(url.netloc):
             # this is a relative image.
             imgpath = os.path.normpath(os.path.join(curdir, src))
+            # Convert any svg files to png
+            if src.split('.')[-1] == 'svg':
+                logger.info(f"SVG {imgpath} found, converting to PNG.") 
+
+                src_png = os.path.splitext(src)[0] + ".png"
+                imgpath_png = os.path.splitext(imgpath)[0] + ".png"
+
+                wd.target.image.convert_svg_to_png(imgpath, imgpath_png)
+
+                img['src'] = src_png
+
+                # Write change to img src attribute
+                with open(filepath, 'w') as f:
+                    f.write(str(soup))
+
+                imgpath = imgpath_png
             logger.debug(f"This is a relative image path. Adding {imgpath} to images")
             gathered.add(imgpath)
         else:

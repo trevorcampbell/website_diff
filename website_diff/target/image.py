@@ -1,5 +1,6 @@
 from PIL import Image, ImageEnhance, ImageChops, ImageOps
 import numpy as np
+import cairosvg
 from loguru import logger
 import os
 import shutil
@@ -48,3 +49,6 @@ def _highlight_image(filepath, filepath_out, color, alpha):
     overlay = Image.new("RGBA", img.size, color = color)
     blended = Image.blend(bw, overlay, alpha)
     blended.convert("RGB").save(filepath_out)
+
+def convert_svg_to_png(filepath, filepath_out):
+    cairosvg.svg2png(url=filepath, write_to=filepath_out)

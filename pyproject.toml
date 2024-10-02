@@ -20,6 +20,7 @@ dependencies = [
     "numpy",
     "vl-convert-python",
     "selenium",
+    "cairosvg",
     "maturin"
 ]
 classifiers = [
