@@ -2,6 +2,7 @@ from PIL import Image, ImageEnhance, ImageChops, ImageOps
 import numpy as np
 from loguru import logger
 import os
+import shutil
 
 def diff(filepath_old, filepath_new, filepath_out):
     if not _img_exists(filepath_old, filepath_new):
@@ -11,8 +12,8 @@ def diff(filepath_old, filepath_new, filepath_out):
     img_new = Image.open(filepath_new).convert("RGB")
     img_diff = ImageChops.difference(img_old, img_new)
     if img_diff.getbbox() is None:
-        # no diff, just save img_new to filepath_out
-        img_new.save(filepath_out)
+        # no diff, just copy filepath_new to filepath_out
+        shutil.copyfile(filepath_new, filepath_out)
         return False
     else:
         # diff, add a yellow border and highlight differences in bright red
