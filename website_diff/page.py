@@ -112,7 +112,7 @@ def highlight_links(file, root, add_pages, del_pages, diff_pages):
         logger.debug(f"Found link in {file}: {ref}")
         logger.debug(f"Parsed link: {url}")
         if not bool(url.netloc) and ref[-5:] == '.html':
-            path = os.path.normpath(url.path)
+            path = os.path.normpath(os.path.join(os.path.dirname(file),url.path))
             if path in diff_pages:
                 logger.debug(f"This is a relative path to a diff'd page. Highlighting")
                 link['class'] = link.get('class', []) + ["link-to-diff"]
