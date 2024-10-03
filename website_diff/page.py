@@ -42,7 +42,7 @@ def _merge_diffs(elem, soup):
     # Delete element if all it contains is a newline character
     if len(elem.contents) == 1 and elem.name in ['ins', 'del'] and child == '\n':
         elem.decompose()
-    else:
+    elif elem.name in ['ins', 'del']:
         _merge_previous(elem)  
 
 def diff(filepath_old, filepath_new, diff_images, root_element, out_root, filepath_out):
