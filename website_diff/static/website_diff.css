@@ -48,4 +48,39 @@ ins.diff-selected > img {
 	color: darkred !important;
 }
 
+/* The alert message box */
+.alert {
+	color: white;
+	position: absolute;
+	right: 4rem;
+	top: 2rem;
+	z-index: 3;
+	border-bottom: none;
+	box-shadow: 5px 5px 10px 2px rgb(0 0 0 / .4);
 
+  }
+
+.alert.add-banner {
+	background-color: darkgreen;
+}
+
+.alert.del-banner {
+	background-color: darkred;
+}
+
+/* The close button */
+.closebtn {
+margin-left: 15px;
+color: white;
+font-weight: bold;
+float: right;
+font-size: 22px;
+line-height: 15px;
+cursor: pointer;
+transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+color: black;
+}

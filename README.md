@@ -15,6 +15,8 @@ files remain constant.
 ## Installation
 Ensure Rust and Cargo are installed. Instructions can be found [here](https://www.rust-lang.org/tools/install).
 
+You may also need to [install the cairo library](https://www.cairographics.org/download/) if your distribution does not include it.
+
 ```
 pip install --upgrade pip
 pip install website_diff
