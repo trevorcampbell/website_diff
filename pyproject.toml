@@ -21,7 +21,6 @@ dependencies = [
     "vl-convert-python",
     "selenium",
     "cairosvg",
-    "maturin"
 ]
 classifiers = [
     "Programming Language :: Rust",
@@ -37,5 +36,5 @@ package-data = {"website_diff" = ["*.css", "*.js"]}
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "website_diff.htmldiff"
+module-name = "website_diff._htmldiff_rs"
 

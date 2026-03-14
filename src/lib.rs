@@ -15,7 +15,7 @@ fn _htmldiff(a: &str, b: &str) -> String {
 }
 
 #[pymodule]
-#[pyo3(name="htmldiff")]
+#[pyo3(name="_htmldiff_rs")]
 fn htmldiff(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(_htmldiff, m)?)?;
     Ok(())
